@@ -43,11 +43,6 @@ def subdir(args, singleton=False):
     tdir = topdir(args)
 
     if tdir == 'Classical':
-        # TODO: probably need to just use subcategory for the composer
-        # since the metadata seems so bad here.
-        # And then if it's [Various] we still need to transform it.
-        # Think about how that logic interacts with the above.
-        # Can we generalize the "Various Foo" naming somehow?
         composer = value('composer', args)
         if not composer: return '[Unknown Composer]'
         if composer.lower() == '[various]': return '[Various Composers]'
