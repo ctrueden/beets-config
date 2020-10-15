@@ -1,0 +1,18 @@
+#!/bin/sh
+find . -type d | while read dir
+do
+  clean=1
+  for f in "$dir"/*
+  do
+    test -d "$f" && clean=0 && break # not a leaf
+    f=$(echo "$f" | tr '[:upper:]' '[:lower:]')
+    ext=${f##*.}
+    case "$ext" in
+      ape|flac|m4a|mp3|ogg|opus|wma)
+        clean=0
+        break
+        ;;
+    esac
+  done
+  test "$clean" -eq 1 && echo "$dir"
+done

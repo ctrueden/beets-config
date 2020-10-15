@@ -1,0 +1,9 @@
+#!/bin/sh
+matches=$(beet ls -f '$album' $@)
+echo "$matches"
+echo "---------"
+echo "$matches" | while read album
+do
+  test "$album" || continue
+  beet modify -y $@ album:"$album" subtitle="$album"
+done

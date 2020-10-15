@@ -1,0 +1,2 @@
+#!/bin/sh
+beet ls -f '$genre' | tr ',' '\n' | sed 's/^ *//' | sort | uniq -c | sort -n

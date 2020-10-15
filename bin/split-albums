@@ -1,0 +1,35 @@
+#!/bin/sh
+
+songs() {
+  find "$1" -maxdepth 1 -type f | grep '\.\(ape\|flac\|m4a\|mp3\|ogg\|opus\|wma\)$'
+}
+
+album() {
+  tracks=$(songs "$1" |
+    sed 's_.*/(\?\([1-9]-\)\?0*\([1-9][0-9]*\).*_\2_' |
+    sort -n
+  )
+  test "$tracks" || return
+  trackcount=$(echo "$tracks" | wc -l)
+  expected=$(seq 1 $trackcount)
+  test $trackcount -gt 1 -a "$tracks" = "$expected" && echo "$1"
+}
+
+move() {
+  src=$1
+  dest=$2
+  srcdir=${src%/*}
+  destdir="$dest/${dir%/*}"
+  mkdir -p "$destdir" && mv "$src" "$destdir/"
+}
+
+find . -type d | while read dir
+do
+  if [ "$(album "$dir")" ]
+  then
+    move "$dir" Albums
+  elif [ "$(songs "$dir")" ]
+  then
+    move "$dir" Tracks
+  fi
+done

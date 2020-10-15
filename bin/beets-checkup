@@ -1,0 +1,49 @@
+echo "==> Suspect paths"
+beet ls -f '$path' 'path::\.[0-9]\.[a-z0-9]+$' |
+  grep -v ' [Nn]o\.[0-9]\.[a-z0-9]\+$' |
+  grep -v ' 5\.1\.1\.[a-z0-9]\+$' |
+  grep -v ' VOL\.4\.[a-z0-9]\+$' |
+  grep -v ' 2\.0\.[a-z0-9]\+$' |
+  grep -v 'STAND ALONE COMPLEX .* 35\.7\.mp3'
+
+echo
+echo "==> Skewed paths"
+beet ls -p | while read p
+do
+  test -e "$p" || echo "$p"
+done
+
+echo
+echo "==> Trailing ', The'"
+beet ls -af '$path :: franchise=$franchise' 'franchise::^.*[Tt]he$'
+beet ls  -f '$path :: franchise=$franchise' 'franchise::^.*[Tt]he$'
+
+echo
+echo "==> Classical: unset composer"
+beet ls -af '$path' 'category:Classical' 'composer::^$'
+beet ls  -f '$path' 'category:Classical' 'composer::^$'
+
+echo
+echo "==> Classical: invalid composer name"
+beet ls -af '$path' :: composer=$composer' 'composer::[^a-zA-Z é\[\]-]'
+beet ls  -f '$path' :: composer=$composer' 'composer::[^a-zA-Z é\[\]-]'
+
+echo
+echo "==> Anthems: unset subcategory"
+beet ls -af '$path' category:Anthems 'subcategory::^$'
+beet ls  -f '$path' category:Anthems 'subcategory::^$'
+
+echo
+echo "==> Soundtracks: unset franchise"
+beet ls -af '$path' category:Soundtracks 'franchise::^$'
+beet ls  -f '$path' category:Soundtracks 'franchise::^$'
+
+echo
+echo "==> Soundtracks: unset avmedia"
+beet ls -af '$path :: franchise=$franchise' 'franchise::..*' 'avmedia::^$'
+beet ls  -f '$path :: franchise=$franchise' 'franchise::..*' 'avmedia::^$'
+
+echo
+echo "==> Holidays: unset holiday"
+beet ls -af '$path' category:Holidays 'holiday::^$'
+beet ls  -f '$path' category:Holidays 'holiday::^$'

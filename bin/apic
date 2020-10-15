@@ -1,0 +1,27 @@
+#!/bin/sh
+
+# apic.sh - dump album art image for the given arguments
+
+apic() {
+  mid3v2 --list-raw "$1" | grep APIC | sed 's/.*data=//'
+}
+
+. ~/miniconda3/etc/profile.d/conda.sh
+conda activate beets
+
+tmpfile=$(mktemp --suffix=.py)
+echo "import sys" > "$tmpfile"
+while [ $# -gt 0 ]
+do
+  f=$1
+  shift
+  echo "sys.stdout.buffer.write(" >> "$tmpfile"
+  if [ "$(apic "$f")" ]
+  then
+    apic "$f" >> "$tmpfile"
+  else
+    echo "b'')" >> "$tmpfile"
+  fi
+done
+python "$tmpfile"
+rm "$tmpfile"
