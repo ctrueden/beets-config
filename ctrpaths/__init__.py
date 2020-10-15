@@ -70,23 +70,17 @@ def subdir(args, singleton=False):
         if composer.lower() == '[various]': return '[Various Composers]'
         return composer
 
-    if tdir == 'Covers':
-        if singleton:
-            title = value('title', args)
-            return simpletitle(title) or '[unknown]'
-        return '[Various Songs]'
-
-    if tdir == 'Holidays':
-        holiday = value('holiday', args)
-        if not holiday: return '[Unknown Holiday]'
-        if holiday.lower() == '[various]': return '[Various Holidays]'
-        return holiday
-
     if tdir == 'Soundtracks':
         franchise = value('franchise', args)
         if not franchise: return '[Unknown Franchise]'
         if franchise.lower() == '[various]': return '[Various Franchises]'
         return franchise
+
+    if tdir == 'Covers' or tdir == 'Holidays':
+        if singleton:
+            title = value('title', args)
+            return simpletitle(title) or '[unknown]'
+        return '[Various Songs]'
 
     if singleton:
         artist = value('artist', args)
