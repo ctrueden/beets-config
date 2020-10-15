@@ -107,3 +107,9 @@ def albumdir(args):
         return albumname(args, withartist=True)
 
     return albumname(args, withartist=False)
+
+def safetitle(args):
+    title = value('title', args) or '[Unknown Title]'
+    subtitle = value('subtitle', args)
+    if subtitle: title += f' [{subtitle}]'
+    return title
