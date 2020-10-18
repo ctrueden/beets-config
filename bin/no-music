@@ -1,18 +1,38 @@
 #!/bin/sh
+
+isassetdir() {
+  d=$1
+  name=$(echo "${d##*/}" | tr '[:upper:]' '[:lower:]')
+  test "$name" = '300-dpi scans' \
+    -o "$name" = '@eadir' \
+    -o "$name" = 'album art' \
+    -o "$name" = 'art' \
+    -o "$name" = 'artwork' \
+    -o "$name" = 'booklet' \
+    -o "$name" = 'c_scan-dg-ilbon2000' \
+    -o "$name" = 'covers' \
+    -o "$name" = 'hq covers' \
+    -o "$name" = 'jacket and disc' \
+    -o "$name" = 'scans' \
+    -o "$name" = 'technical spec' \
+    -o "$name" = 'video links'
+}
+
 find . -type d | while read dir
 do
-  clean=1
+  isassetdir "$dir" && continue
+  ok=
   for f in "$dir"/*
   do
-    test -d "$f" && clean=0 && break # not a leaf
+    test -d "$f" && ! isassetdir "$f" && ok=1 && break # not a leaf
     f=$(echo "$f" | tr '[:upper:]' '[:lower:]')
     ext=${f##*.}
     case "$ext" in
       ape|flac|m4a|mp3|ogg|opus|wma)
-        clean=0
+        ok=1
         break
         ;;
     esac
   done
-  test "$clean" -eq 1 && echo "$dir"
+  test "$ok" || echo "$dir"
 done
