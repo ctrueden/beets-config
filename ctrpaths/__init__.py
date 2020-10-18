@@ -50,7 +50,7 @@ def simpletitle(title):
     if paren < 0:
         return title
     subtitle = title[paren:].lower()
-    if 'remix' in subtitle or 'live' in subtitle:
+    if 'mix' in subtitle or 'live' in subtitle or 'edit' in subtitle or 'version' in subtitle:
         return title[:paren].rstrip()
     return title
 
