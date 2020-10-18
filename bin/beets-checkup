@@ -1,3 +1,5 @@
+dir=$(cd "$(dirname "$0")" && pwd)
+
 echo "==> Suspect paths"
 beet ls -f '$path' 'path::\.[0-9]\.[a-z0-9]+$' |
   grep -v ' [Nn]o\.[0-9]\.[a-z0-9]\+$' |
@@ -12,6 +14,10 @@ beet ls -p | while read p
 do
   test -e "$p" || echo "$p"
 done
+
+echo
+echo "==> Folders without any music"
+"$dir/no-music"
 
 echo
 echo "==> Trailing ', The'"
