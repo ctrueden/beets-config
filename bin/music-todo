@@ -1,0 +1,17 @@
+#!/bin/sh
+
+cd /voldemort/incoming/music
+
+echo "[Imported into library]"
+beet ls | wc -l
+
+echo
+echo "[Left to import]"
+find . -type f | wc -l
+
+echo
+echo "[Remaining breakdown]"
+for f in Tough-Albums/* Tough-Tracks/* Tracks/*
+do
+echo "$(find "$f" -type f | wc -l) :: $f"
+done | sort -n
