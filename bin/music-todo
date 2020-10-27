@@ -1,17 +1,17 @@
 #!/bin/sh
 
-cd /voldemort/incoming/music
+incomingMusic=/voldemort/incoming/music
 
 echo "[Imported into library]"
 beet ls | wc -l
 
 echo
 echo "[Left to import]"
-find . -type f | wc -l
+find "$incomingMusic" -type f | wc -l
 
 echo
 echo "[Remaining breakdown]"
-for f in Tough-Albums/* Tough-Tracks/* Tracks/*
+for f in "$incomingMusic"/*/*
 do
-echo "$(find "$f" -type f | wc -l) :: $f"
+  echo "$(find "$f" -type f | wc -l) :: $f"
 done | sort -n
