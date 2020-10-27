@@ -18,7 +18,12 @@ isassetdir() {
     -o "$name" = 'video links'
 }
 
-find . -type d | while read dir
+test $# -gt 0 || {
+  echo "Usage: no-music <directory-tree-to-check> ..."
+  exit 1
+}
+
+find $@ -type d | while read dir
 do
   isassetdir "$dir" && continue
   ok=
