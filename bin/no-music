@@ -8,6 +8,7 @@ isassetdir() {
     -o "$name" = 'album art' \
     -o "$name" = 'art' \
     -o "$name" = 'artwork' \
+    -o "$name" = 'bonus' \
     -o "$name" = 'booklet' \
     -o "$name" = 'c_scan-dg-ilbon2000' \
     -o "$name" = 'covers' \
