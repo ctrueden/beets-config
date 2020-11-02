@@ -3,8 +3,8 @@
 isassetdir() {
   d=$1
   name=$(echo "${d##*/}" | tr '[:upper:]' '[:lower:]')
-  test "$name" = '300-dpi scans' \
-    -o "$name" = '@eadir' \
+  test "$name" = '@eadir' \
+    -o "$name" = '300-dpi scans' \
     -o "$name" = 'album art' \
     -o "$name" = 'art' \
     -o "$name" = 'artwork' \
@@ -13,7 +13,9 @@ isassetdir() {
     -o "$name" = 'c_scan-dg-ilbon2000' \
     -o "$name" = 'covers' \
     -o "$name" = 'hq covers' \
+    -o "$name" = 'immagini' \
     -o "$name" = 'jacket and disc' \
+    -o "$name" = 'playlists' \
     -o "$name" = 'scans' \
     -o "$name" = 'technical spec' \
     -o "$name" = 'video links'
