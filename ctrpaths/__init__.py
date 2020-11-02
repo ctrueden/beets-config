@@ -37,7 +37,8 @@ def artistname(artist):
 def albumname(args, withartist):
     album = value('album', args)
     albumartist = value('albumartist', args)
-    year = value('year', args)
+    original_year = value('original_year', args)
+    year = original_year or value('year', args)
 
     year_part = f'({year}) ' if year else ''
     artist_part = albumartist + ' - ' if albumartist and withartist else ''
