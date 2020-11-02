@@ -20,6 +20,10 @@ echo "==> Folders without any music"
 "$dir/no-music"
 
 echo
+echo "==> Albums missing tracktotal"
+beet ls -p tracktotal:0 singleton:False
+
+echo
 echo "==> Trailing ', The'"
 beet ls -af '$path :: franchise=$franchise' 'franchise::^.*[Tt]he$'
 beet ls  -f '$path :: franchise=$franchise' 'franchise::^.*[Tt]he$'
