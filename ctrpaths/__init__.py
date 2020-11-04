@@ -20,7 +20,71 @@
 # - Covers/<title>/...
 # - Soundtracks/<franchise>/...
 
-def value(key, args):
+### INLINE FIELDS ###
+
+def topdir(args):
+    category = _value('category', args)
+    return category or 'Artists'
+
+def subdir(args, singleton=False):
+    subcategory = _value('subcategory', args)
+    if subcategory: return subcategory
+
+    tdir = topdir(args)
+
+    if tdir == 'Classical':
+        composer = _value('composer', args)
+        if not composer: return '[Unknown Composer]'
+        if composer.lower() == '[various]': return '[Various Composers]'
+        return composer
+
+    if tdir == 'Soundtracks':
+        franchise = _value('franchise', args)
+        if not franchise: return '[Unknown Franchise]'
+        if franchise.lower() == '[various]': return '[Various Franchises]'
+        return franchise
+
+    if tdir == 'Covers' or tdir == 'Holidays':
+        if singleton:
+            title = _value('title', args)
+            return _simpletitle(title) or '[unknown]'
+        return '[Various Songs]'
+
+    if singleton:
+        artist = _value('artist', args)
+        return _simpleartist(artist)
+
+    comp = _value('comp', args)
+    if comp: return '[Various Artists]'
+
+    albumartist = _value('albumartist', args)
+    return _simpleartist(albumartist)
+
+def albumdir(args):
+    comp = _value('comp', args)
+    if comp: return _albumname(args, withartist=False)
+
+    tdir = topdir(args)
+    if tdir == 'Classical' or tdir == 'Covers' or tdir == 'Holidays' or tdir == 'Soundtracks':
+        return _albumname(args, withartist=True)
+
+    return _albumname(args, withartist=False)
+
+def safetitle(args):
+    title = _value('title', args) or '[Unknown Title]'
+    subtitle = _value('subtitle', args)
+    if subtitle: title += f' [{subtitle}]'
+    return title
+
+def safeartist(artist):
+    if artist == '(həd) p.e.': return 'Hed PE'
+    if artist == '*NSYNC': return 'NSYNC'
+    if artist == '? and the Mysterians': return 'Q and the Mysterians'
+    return artist
+
+### HELPER FUNCTIONS ###
+
+def _value(key, args):
     return args[key] if key in args else None
 
 # NB: The singleton field, being a computed field, is not passed to the inline
@@ -31,21 +95,18 @@ def value(key, args):
 #def singleton(args):
 #    return False if value('album_id', args) else True
 
-def artistname(artist):
-    return artist if artist and artist.lower() != '[unknown]' else '[Unknown Artist]'
-
-def albumname(args, withartist):
-    album = value('album', args)
-    albumartist = value('albumartist', args)
-    original_year = value('original_year', args)
-    year = original_year or value('year', args)
+def _albumname(args, withartist):
+    album = _value('album', args)
+    albumartist = _value('albumartist', args)
+    original_year = _value('original_year', args)
+    year = original_year or _value('year', args)
 
     year_part = f'({year}) ' if year else ''
     artist_part = albumartist + ' - ' if albumartist and withartist else ''
     album_part = album if album else '[Unknown Album]'
     return year_part + artist_part + album_part
 
-def simpletitle(title):
+def _simpletitle(title):
     if title is None: return None
     paren = title.rfind('(')
     if paren < 0:
@@ -55,56 +116,5 @@ def simpletitle(title):
         return title[:paren].rstrip()
     return title
 
-def topdir(args):
-    category = value('category', args)
-    return category or 'Artists'
-
-def subdir(args, singleton=False):
-    subcategory = value('subcategory', args)
-    if subcategory: return subcategory
-
-    tdir = topdir(args)
-
-    if tdir == 'Classical':
-        composer = value('composer', args)
-        if not composer: return '[Unknown Composer]'
-        if composer.lower() == '[various]': return '[Various Composers]'
-        return composer
-
-    if tdir == 'Soundtracks':
-        franchise = value('franchise', args)
-        if not franchise: return '[Unknown Franchise]'
-        if franchise.lower() == '[various]': return '[Various Franchises]'
-        return franchise
-
-    if tdir == 'Covers' or tdir == 'Holidays':
-        if singleton:
-            title = value('title', args)
-            return simpletitle(title) or '[unknown]'
-        return '[Various Songs]'
-
-    if singleton:
-        artist = value('artist', args)
-        return artistname(artist)
-
-    comp = value('comp', args)
-    if comp: return '[Various Artists]'
-
-    albumartist = value('albumartist', args)
-    return artistname(albumartist)
-
-def albumdir(args):
-    comp = value('comp', args)
-    if comp: return albumname(args, withartist=False)
-
-    tdir = topdir(args)
-    if tdir == 'Classical' or tdir == 'Covers' or tdir == 'Holidays' or tdir == 'Soundtracks':
-        return albumname(args, withartist=True)
-
-    return albumname(args, withartist=False)
-
-def safetitle(args):
-    title = value('title', args) or '[Unknown Title]'
-    subtitle = value('subtitle', args)
-    if subtitle: title += f' [{subtitle}]'
-    return title
+def _simpleartist(artist):
+    return safeartist(artist) if artist and artist.lower() != '[unknown]' else '[Unknown Artist]'
