@@ -1,0 +1,178 @@
+directory: /voldemort/music
+
+# beet update = update library to match files/tags on disk
+# beet write = update files/tags on disk to match library
+
+pluginpath:
+  - ~/code/music/beets/beetsplug
+  - ~/code/music/beets-ibroadcast/beetsplug
+  - ~/code/music/whatlastgenre/plugin/beets/beetsplug
+
+plugins:
+
+  # -- Core plugins --
+
+  - acousticbrainz  # [PASSIVE] beet acousticbrainz
+                    # https://beets.readthedocs.io/en/stable/plugins/acousticbrainz.html
+
+  - discogs         # [PASSIVE] enable discogs as an autotagger source
+                    # https://beets.readthedocs.io/en/stable/plugins/discogs.html
+
+  - duplicates      # beet dup - find duplicate tracks or albums
+                    # https://beets.readthedocs.io/en/stable/plugins/duplicates.html
+
+  - edit            # beet edit <query> - edit tags in a text editor
+                    # https://beets.readthedocs.io/en/stable/plugins/edit.html
+
+  - embedart        # [PASSIVE] embed album art directly into each file
+                    # https://beets.readthedocs.io/en/stable/plugins/embedart.html
+
+  - fetchart        # [PASSIVE] retrieve album art images from the Web
+                    # https://beets.readthedocs.io/en/stable/plugins/fetchart.html
+
+  - fuzzy           # beet ls '~Vareoldur' - tilde for fuzzy search
+                    # https://beets.readthedocs.io/en/stable/plugins/fuzzy.html
+
+  - info            # beet info <query-or-path>; dump tags from matching files
+                    # beet info -l <query> - dump fields for matching DB entries
+                    # https://beets.readthedocs.io/en/stable/plugins/info.html
+
+  - inline          # [PASSIVE] customize your path formats using Python code
+                    # https://beets.readthedocs.io/en/stable/plugins/inline.html
+
+  - lyrics          # beet lyrics - fetch and store song lyrics
+                    # https://beets.readthedocs.io/en/stable/plugins/lyrics.html
+
+  - missing         # beet missing - list albums with missing tracks
+                    # https://beets.readthedocs.io/en/stable/plugins/missing.html
+
+  - playlist        # beet ls playlist:/path/to/someplaylist.m3u
+                    # https://beets.readthedocs.io/en/stable/plugins/playlist.html
+
+  - the             # [PASSIVE] move "the, an, a" articles to the end
+                    # https://beets.readthedocs.io/en/stable/plugins/the.html
+
+  - types           # [PASSIVE] stronger typing for attributes
+                    # https://beets.readthedocs.io/en/stable/plugins/types.html
+
+  - web             # beet web - web server for querying and playing music
+                    # https://beets.readthedocs.io/en/stable/plugins/web.html
+
+  # -- Third party plugins --
+
+  - artistcountry   # [PASSIVE] fetch and store artist_country field
+                    # https://github.com/agrausem/beets-artistcountry
+
+  - describe        # beet describe <field_name>
+                    # https://github.com/adamjakab/BeetsPluginDescribe
+
+# NB: DO NOT ENABLE THIS! It sometimes crashes beets and can corrupt filenames.
+#  - copyartifacts   # [PASSIVE] copy-non-music files when importing
+#                    # https://github.com/adammillerio/beets-copyartifacts
+
+  - ibroadcast      # [PASSIVE] upload your library to iBroadcast
+                    # https://github.com/ctrueden/beets-ibroadcast
+
+  - usertag         # beet addtag <query> -t <usertag>; beet listtags
+                    # https://github.com/igordertigor/beets-usertag
+
+  - wlg             # beet wlg <query>
+                    # https://github.com/YetAnotherNerd/whatlastgenre/tree/master/plugin/beets
+
+  - ydl             # beet ydl <youtube-url> - import music from YouTube
+                    # https://github.com/vmassuchetto/beets-ydl
+
+  - metasync
+
+metasync:
+  source: itunes
+  itunes:
+    library: /voldemort/incoming/music/iTunes-Library.xml
+
+# -- Potentially interesting plugins for later --
+# https://github.com/geigerzaehler/beets-alternatives
+# https://pypi.org/project/beets-goingrunning/
+# https://github.com/adamjakab/BeetsPluginXtractor
+# https://beets.readthedocs.io/en/stable/plugins/badfiles.html -- check MP3s et al. for brokenness
+# https://beets.readthedocs.io/en/stable/plugins/kodiupdate.html -- generate/refresh Kodi library from beets library
+# https://beets.readthedocs.io/en/stable/plugins/mbsync.html -- refresh metadata from MusicBrainz for already-imported items
+# https://beets.readthedocs.io/en/stable/plugins/metasync.html -- import metadata from iTunes
+# -- If I want to go down the CLI audio player rabbit hole --
+# https://beets.readthedocs.io/en/stable/plugins/play.html
+# https://github.com/coolkehon/beets/blob/master/beetsplug/cmus.py
+# https://beets.readthedocs.io/en/stable/plugins/bpd.html
+# https://www.musicpd.org/clients/
+
+ignore:
+  - .*
+  - '@eaDir'
+  - System Volume Information
+  - lost+found
+
+import:
+  move: yes
+  languages: en
+
+asciify_paths: yes
+per_disc_numbering: yes
+
+match:
+  preferred:
+    countries: ['US', 'GB|UK']
+    media: ['CD', 'Digital Media|File']
+    original_year: yes
+#  ignored: unmatched_tracks
+#  ignored: missing_tracks unmatched_tracks
+#  max_rec:
+#    missing_tracks: medium
+
+album_fields:
+  topdir:           import ctrpaths; return ctrpaths.topdir(globals())
+  subdir:           import ctrpaths; return ctrpaths.subdir(globals())
+  albumdir:         import ctrpaths; return ctrpaths.albumdir(globals())
+
+item_fields:
+  topdir:           import ctrpaths; return ctrpaths.topdir(globals())
+  subdir_singleton: import ctrpaths; return ctrpaths.subdir(globals(), singleton=True)
+  safetitle:        import ctrpaths; return ctrpaths.safetitle(globals())
+  safeartist:       import ctrpaths; return ctrpaths.safeartist(artist)
+  disc_and_track: |
+    if disctotal > 9:
+      return u'%02i-%02i'% (disc, track)
+    elif disctotal > 1:
+      return u'%01i-%02i' % (disc, track)
+    elif tracktotal > 99:
+      return u'%03i' % (track)
+    elif tracktotal > 9:
+      return u'%02i' % (track)
+    else:
+      return u'%01i' % (track)
+
+paths:
+  singleton: $topdir/%the{$subdir_singleton}/%the{$safeartist} - $safetitle
+  comp:      $topdir/%the{$subdir}/$albumdir%aunique{albumartist album, albumdisambig albumtype year label catalognum}/($disc_and_track) $safeartist - $safetitle
+  default:   $topdir/%the{$subdir}/$albumdir%aunique{albumartist album, albumdisambig albumtype year label catalognum}/($disc_and_track) $safetitle
+
+embedart:
+  compare_threshold: 50
+  ifempty: yes
+  remove_art_file: yes
+
+lyrics:
+  auto: no
+  sources: genius
+
+playlist:
+  auto: yes
+  playlist_dir: /voldemort/music/Playlists
+
+types:
+  ib_uploadtime: date
+
+web:
+  host: 0.0.0.0
+  include_paths: true
+
+wlg:
+  auto: yes
+  force: no
