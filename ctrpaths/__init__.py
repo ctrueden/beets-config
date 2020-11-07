@@ -73,7 +73,12 @@ def albumdir(args):
 def safetitle(args):
     title = _value('title', args) or '[Unknown Title]'
     subtitle = _value('subtitle', args)
-    if subtitle: title += f' [{subtitle}]'
+    if subtitle:
+        title += f' [{subtitle}]'
+    else:
+        albumtype = _value('albumtype', args)
+        if albumtype == 'live':
+            title += ' [live]'
     return title
 
 def safeartist(artist):
