@@ -1,4 +1,7 @@
+#!/bin/sh
+
 dir=$(cd "$(dirname "$0")" && pwd)
+musicBase=/voldemort/music
 
 echo "==> Suspect paths"
 beet ls -f '$path' 'path::\.[0-9]\.[a-z0-9]+$' |
@@ -17,7 +20,17 @@ done
 
 echo
 echo "==> Folders without any music"
-"$dir/no-music" /voldemort/music
+"$dir/no-music" "$musicBase"
+
+echo
+echo "==> Playlists with invalid entries"
+(
+  cd "$musicBase"
+  find Playlists -name '*.m3u' | while read m3u
+  do
+    "$dir/check-playlist" "$m3u"
+  done
+)
 
 echo
 echo "==> Albums missing tracktotal"

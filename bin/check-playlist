@@ -1,0 +1,10 @@
+#!/bin/sh
+
+while [ $# -gt 0 ]
+do
+  cat "$1" | while read f
+  do
+    test -f "$f" || echo "$1: $f"
+  done
+  shift
+done
