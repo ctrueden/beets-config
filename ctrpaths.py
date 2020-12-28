@@ -122,12 +122,18 @@ def _albumname(args, withartist):
 def _simpletitle(title):
     if title is None: return None
     paren = title.rfind('(')
-    if paren < 0:
-        return title
+    if paren < 0: return title
     subtitle = title[paren:].lower()
     if 'mix' in subtitle or 'live' in subtitle or 'edit' in subtitle or 'version' in subtitle:
         return title[:paren].rstrip()
     return title
 
 def _simpleartist(artist):
-    return safeartist(artist) if artist and artist.lower() != '[unknown]' else '[Unknown Artist]'
+    if not artist or artist.lower() == '[unknown]':
+        return '[Unknown Artist]'
+    safe_artist = safeartist(artist)
+    feat = safe_artist.lower().find(' feat. ')
+    if feat >= 0: return safe_artist[:feat]
+    feat = safe_artist.lower().find(' featuring ')
+    if feat >= 0: return safe_artist[:feat]
+    return safe_artist
