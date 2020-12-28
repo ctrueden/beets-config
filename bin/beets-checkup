@@ -9,7 +9,7 @@ beet ls -f '$path' 'path::\.[0-9]\.[a-z0-9]+$' |
   grep -v ' 5\.1\.1\.[a-z0-9]\+$' |
   grep -v ' VOL\.4\.[a-z0-9]\+$' |
   grep -v ' 2\.0\.[a-z0-9]\+$' |
-  grep -v 'STAND ALONE COMPLEX .* 35\.7\.mp3'
+  grep -v 'Stand Alone Complex .* 35\.7\.mp3'
 
 echo
 echo "==> Skewed paths"
