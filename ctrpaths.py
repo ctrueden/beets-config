@@ -5,7 +5,7 @@
 # - subtitle: disambiguating string after title, in brackets
 #
 # For soundtracks:
-# - avmedia: Animation, TV, Video Games, Musicals, Movies (from folder name)
+# - avmedia: Animation, TV, Video Games, Musicals, Movies
 # - franchise: Final Fantasy
 #
 # For world music:
