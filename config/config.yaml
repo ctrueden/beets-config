@@ -134,6 +134,7 @@ album_fields:
 item_fields:
   topdir:           import ctrpaths; return ctrpaths.topdir(globals())
   subdir_singleton: import ctrpaths; return ctrpaths.subdir(globals(), singleton=True)
+  safeprefix:       import ctrpaths; return ctrpaths.safeprefix(globals())
   safetitle:        import ctrpaths; return ctrpaths.safetitle(globals())
   safeartist:       import ctrpaths; return ctrpaths.safeartist(artist)
   disc_and_track: |
@@ -149,7 +150,7 @@ item_fields:
       return u'%01i' % (track)
 
 paths:
-  singleton: $topdir/%the{$subdir_singleton}/%the{$safeartist} - $safetitle
+  singleton: $topdir/%the{$subdir_singleton}/$safeprefix%the{$safeartist} - $safetitle
   comp:      $topdir/%the{$subdir}/$albumdir%aunique{albumartist album, albumdisambig albumtype year label catalognum}/($disc_and_track) $safeartist - $safetitle
   default:   $topdir/%the{$subdir}/$albumdir%aunique{albumartist album, albumdisambig albumtype year label catalognum}/($disc_and_track) $safetitle
 

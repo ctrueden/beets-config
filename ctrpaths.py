@@ -3,6 +3,7 @@
 # - category: Primary directory override
 # - subcategory: Secondary directory override
 # - subtitle: disambiguating string after title, in brackets
+# - prefix: string at beginning of filename, in brackets
 #
 # For soundtracks:
 # - avmedia: Animation, TV, Video Games, Musicals, Movies
@@ -77,6 +78,10 @@ def albumdir(args):
         return _albumname(args, withartist=True)
 
     return _albumname(args, withartist=False)
+
+def safeprefix(args):
+    prefix =_value('prefix', args)
+    return f'[{prefix}] ' if prefix else ''
 
 def safetitle(args):
     title = _value('title', args) or '[Unknown Title]'
