@@ -98,6 +98,15 @@ def safeartist(artist):
     if artist == '(həd) p.e.': return 'Hed PE'
     if artist == '*NSYNC': return 'NSYNC'
     if artist == '? and the Mysterians': return 'Q and the Mysterians'
+    if len(artist) > 100:
+        # Ensure safe artist string does not exceed 100 characters.
+        comma = artist.find(',')
+        if comma >= 0 and comma <= 93:
+            return artist[:comma] + ' et al.'
+        trunc = artist.find(' ')
+        if trunc < 0 or trunc > 97:
+            trunc = 97
+        return artist[:trunc] + '...'
     return artist
 
 ### HELPER FUNCTIONS ###
