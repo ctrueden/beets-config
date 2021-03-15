@@ -79,8 +79,10 @@ plugins:
   - wlg             # beet wlg <query>
                     # https://github.com/YetAnotherNerd/whatlastgenre/tree/master/plugin/beets
 
-  - ydl             # beet ydl <youtube-url> - import music from YouTube
-                    # https://github.com/vmassuchetto/beets-ydl
+# NB: Disabled until I have a chance to iron out the bugs. It tends
+# to import things with no metadata, resulting in messes to clean up.
+#  - ydl             # beet ydl <youtube-url> - import music from YouTube
+#                    # https://github.com/vmassuchetto/beets-ydl
 
   - metasync
 
