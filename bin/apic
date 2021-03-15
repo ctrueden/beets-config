@@ -1,6 +1,9 @@
 #!/bin/sh
 
-# apic.sh - dump album art image for the given arguments
+# apic - dump album art image for the given arguments
+
+# To easily view the output on the console, use:
+#   apic file.mp3 | convert - jpg:- | jp2a -
 
 apic() {
   mid3v2 --list-raw "$1" | grep APIC | sed 's/.*data=//'
