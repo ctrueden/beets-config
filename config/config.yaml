@@ -174,6 +174,7 @@ types:
 
 web:
   host: 0.0.0.0
+  cors: 'http://localhost:3000'
   include_paths: true
 
 wlg:
