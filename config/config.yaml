@@ -123,6 +123,7 @@ match:
     countries: ['US', 'GB|UK']
     media: ['CD', 'Digital Media|File']
     original_year: yes
+#  strong_rec_thresh: 0.50
 #  ignored: unmatched_tracks
 #  ignored: missing_tracks unmatched_tracks
 #  max_rec:
