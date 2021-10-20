@@ -70,3 +70,8 @@ echo
 echo "==> Holidays: unset holiday"
 beet ls -af '$path' category:Holidays 'holiday::^$'
 beet ls  -f '$path' category:Holidays 'holiday::^$'
+
+echo
+echo "==> Wrong genres"
+beet ls -af '[$genre] $path' genre:capella
+beet ls -f '[$genre] $path' genre:capella
