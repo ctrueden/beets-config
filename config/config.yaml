@@ -63,9 +63,6 @@ plugins:
   - artistcountry   # [PASSIVE] fetch and store artist_country field
                     # https://github.com/agrausem/beets-artistcountry
 
-  - describe        # beet describe <field_name>
-                    # https://github.com/adamjakab/BeetsPluginDescribe
-
 # NB: DO NOT ENABLE THIS! It sometimes crashes beets and can corrupt filenames.
 #  - copyartifacts   # [PASSIVE] copy-non-music files when importing
 #                    # https://github.com/adammillerio/beets-copyartifacts
