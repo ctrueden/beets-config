@@ -1,2 +1,11 @@
 #!/bin/sh
-beet ls -f '$genre' | tr ',' '\n' | sed 's/^ *//' | sort | uniq -c | sort -n
+dir=$(dirname "$0")/..
+genres=$(cat "$dir/data/genres.txt")
+beet ls -f '$genre' | sed 's/, */\n/g' | sort | uniq -c | sort -nr | while read line
+do
+  s=$(echo "$line" | sed 's/^\( *[0-9]* \)/\1 :: /')
+  count=${s% :: *}
+  genre=${s#* :: }
+  echo "$genres" | grep -qFx "$genre" && OK="   " || OK="[x]"
+  echo "$OK $line"
+done
