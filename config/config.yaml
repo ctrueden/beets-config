@@ -3,6 +3,9 @@ directory: /voldemort/music
 # beet update = update library to match files/tags on disk
 # beet write = update files/tags on disk to match library
 
+musicbrainz:
+  genres: yes
+
 pluginpath:
   - ~/code/music/whatlastgenre/plugin/beets/beetsplug
 
