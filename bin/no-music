@@ -17,6 +17,7 @@ isassetdir() {
     -o "$name" = 'jacket and disc' \
     -o "$name" = 'playlists' \
     -o "$name" = 'scans' \
+    -o "$name" = 'sequencer' \
     -o "$name" = 'technical spec' \
     -o "$name" = 'video links'
 }
@@ -26,7 +27,7 @@ test $# -gt 0 || {
   exit 1
 }
 
-find $@ -type d | while read dir
+find $@ -maxdepth 1 -type d | while read dir
 do
   isassetdir "$dir" && continue
   ok=
