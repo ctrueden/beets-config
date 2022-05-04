@@ -4,8 +4,6 @@ directory: /voldemort/music
 # beet write = update files/tags on disk to match library
 
 pluginpath:
-  - ~/code/music/beets/beetsplug
-  - ~/code/music/beets-ibroadcast/beetsplug
   - ~/code/music/whatlastgenre/plugin/beets/beetsplug
 
 plugins:
@@ -74,7 +72,7 @@ plugins:
                     # https://github.com/igordertigor/beets-usertag
 
   - wlg             # beet wlg <query>
-                    # https://github.com/YetAnotherNerd/whatlastgenre/tree/master/plugin/beets
+                    # https://github.com/YetAnotherNerd/whatlastgenre
 
 # NB: Disabled until I have a chance to iron out the bugs. It tends
 # to import things with no metadata, resulting in messes to clean up.

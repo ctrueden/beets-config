@@ -4,7 +4,7 @@ from setuptools import setup
 
 setup(
     name='ctrpaths',
-    version=1,
+    version=2,
     license='Unlicense',
     packages=['ctrpaths'],
 )
