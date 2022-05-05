@@ -16,7 +16,9 @@ dependencies:
   - munkres # for beets
   - musicbrainzngs # for beets, beets-artistcountry
   - mutagen # for whatlastgenre
+  - rauth # for whatlastgenre
   - requests # for fetchart, lyrics, whatlastgenre
+  - requests-cache # for whatlastgenre
   - unidecode # for beets
   - pip
   - pip:
