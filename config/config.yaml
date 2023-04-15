@@ -82,13 +82,6 @@ plugins:
 #  - ydl             # beet ydl <youtube-url> - import music from YouTube
 #                    # https://github.com/vmassuchetto/beets-ydl
 
-  - metasync
-
-metasync:
-  source: itunes
-  itunes:
-    library: /quark/incoming/music/iTunes-Library.xml
-
 # -- Potentially interesting plugins for later --
 # https://github.com/geigerzaehler/beets-alternatives
 # https://pypi.org/project/beets-goingrunning/
