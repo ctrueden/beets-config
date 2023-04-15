@@ -1,4 +1,4 @@
-directory: /voldemort/music
+directory: /quark/music
 
 # beet update = update library to match files/tags on disk
 # beet write = update files/tags on disk to match library
@@ -87,7 +87,7 @@ plugins:
 metasync:
   source: itunes
   itunes:
-    library: /voldemort/incoming/music/iTunes-Library.xml
+    library: /quark/incoming/music/iTunes-Library.xml
 
 # -- Potentially interesting plugins for later --
 # https://github.com/geigerzaehler/beets-alternatives
@@ -166,7 +166,7 @@ lyrics:
 
 playlist:
   auto: yes
-  playlist_dir: /voldemort/music/Playlists
+  playlist_dir: /quark/music/Playlists
 
 types:
   ib_uploadtime: date
