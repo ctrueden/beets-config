@@ -1,7 +1,6 @@
 name: beets
 channels:
   - conda-forge
-  - defaults
 dependencies:
   - python=3.9
   - beautifulsoup4 # for lyrics
