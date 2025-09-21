@@ -2,7 +2,7 @@ name: beets
 channels:
   - conda-forge
 dependencies:
-  - python=3.9
+  - python=3.12
   - beautifulsoup4 # for lyrics
   - oauthlib # for discogs_client
   - confuse # for beets
