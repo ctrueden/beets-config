@@ -46,11 +46,18 @@ plugins:
   - lyrics          # beet lyrics - fetch and store song lyrics
                     # https://beets.readthedocs.io/en/stable/plugins/lyrics.html
 
+  - mbsync          # beet mbsync <query> - refresh metadata from remote data sources
+                    # https://beets.readthedocs.io/en/stable/plugins/mbsync.html
+
   - missing         # beet missing - list albums with missing tracks
                     # https://beets.readthedocs.io/en/stable/plugins/missing.html
 
   - playlist        # beet ls playlist:/path/to/someplaylist.m3u
                     # https://beets.readthedocs.io/en/stable/plugins/playlist.html
+
+  - spotify         # beet spotify - generate Spotify playlists from local tracks
+                    # beet spotifysync - refresh track metadata from Spotify source
+                    # https://beets.readthedocs.io/en/stable/plugins/spotify.html
 
   - the             # [PASSIVE] move "the, an, a" articles to the end
                     # https://beets.readthedocs.io/en/stable/plugins/the.html
