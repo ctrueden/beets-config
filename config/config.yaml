@@ -13,7 +13,9 @@ plugins:
 
   # -- Core plugins --
 
-  - acousticbrainz  # [PASSIVE] beet acousticbrainz
+  # NB: The AcousticBrainz project shut down in 2022:
+  # https://community.metabrainz.org/t/acousticbrainz-making-a-hard-decision-to-end-the-project/572828
+  #- acousticbrainz  # [PASSIVE] beet acousticbrainz
                     # https://beets.readthedocs.io/en/stable/plugins/acousticbrainz.html
 
   - discogs         # [PASSIVE] enable discogs as an autotagger source
