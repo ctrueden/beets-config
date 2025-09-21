@@ -24,6 +24,6 @@ dependencies:
     - beets
     - beets-artistcountry
     - beets-ibroadcast
-    - discogs_client # for discogs
+    - python3-discogs-client # for discogs
     - git+https://github.com/igordertigor/beets-usertag.git
     - -e . # ctrpaths
