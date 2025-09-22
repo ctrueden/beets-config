@@ -52,6 +52,9 @@ plugins:
   - missing         # beet missing - list albums with missing tracks
                     # https://beets.readthedocs.io/en/stable/plugins/missing.html
 
+  - musicbrainz     # [PASSIVE] enable musicbrainz as an autotagger source
+                    # https://beets.readthedocs.io/en/stable/plugins/musicbrainz.html
+
   - playlist        # beet ls playlist:/path/to/someplaylist.m3u
                     # https://beets.readthedocs.io/en/stable/plugins/playlist.html
 
