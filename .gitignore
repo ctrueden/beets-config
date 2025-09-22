@@ -1,5 +1,5 @@
 /*.egg-info/
 __pycache__/
-/config/discogs_token.json
+/config/*.json
 /config/library.db*
 /config/state.pickle
