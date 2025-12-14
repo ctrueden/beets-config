@@ -146,17 +146,7 @@ item_fields:
   safeprefix:       import ctrpaths; return ctrpaths.safeprefix(globals())
   safetitle:        import ctrpaths; return ctrpaths.safetitle(globals())
   safeartist:       import ctrpaths; return ctrpaths.safeartist(artist)
-  disc_and_track: |
-    if disctotal > 9:
-      return u'%02i-%02i'% (disc, track)
-    elif disctotal > 1:
-      return u'%01i-%02i' % (disc, track)
-    elif tracktotal > 99:
-      return u'%03i' % (track)
-    elif tracktotal > 9:
-      return u'%02i' % (track)
-    else:
-      return u'%01i' % (track)
+  disc_and_track:   import ctrpaths; return ctrpaths.disc_and_track(globals())
 
 paths:
   singleton: $topdir/%the{$subdir_singleton}/$safeprefix%the{$safeartist} - $safetitle

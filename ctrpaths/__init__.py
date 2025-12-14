@@ -109,10 +109,26 @@ def safeartist(artist):
         return artist[:trunc] + '...'
     return artist
 
+def disc_and_track(args):
+    disc =_value('disc', args)
+    disctotal =_value('disctotal', args) or 1
+    track =_value('track', args)
+    tracktotal =_value('tracktotal', args) or 2
+
+    track_prefix = _zeropad(track, tracktotal)
+    if disctotal <= 1:
+        return track_prefix
+
+    disc_prefix = _zeropad(disc, disctotal)
+    return f'{disc_prefix}-{track_prefix}'
+
 ### HELPER FUNCTIONS ###
 
 def _value(key, args):
     return args[key] if key in args else None
+
+def _zeropad(no, total):
+    return str(no).zfill(len(str(total)))
 
 # NB: The singleton field, being a computed field, is not passed to the inline
 # plugin. However, it is set to True when an item's album_id is not set; see
