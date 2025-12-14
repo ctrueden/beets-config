@@ -171,7 +171,8 @@ types:
 
 web:
   host: 0.0.0.0
-  cors: 'http://localhost:3000'
+  cors: '*'
+  reverse_proxy: true
   include_paths: true
 
 wlg:
