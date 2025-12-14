@@ -138,8 +138,8 @@ def _simpletitle(title):
     paren = title.rfind('(')
     if paren < 0: return title
     subtitle = title[paren:].lower()
-    if 'mix' in subtitle or 'live' in subtitle or 'edit' in subtitle or 'version' in subtitle:
-        return title[:paren].rstrip()
+    if any(word in subtitle for word in ('mix', 'live', 'edit', 'version')):
+        title = title[:paren].rstrip()
     return title
 
 def _simpleartist(artist):
