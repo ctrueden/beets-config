@@ -44,6 +44,41 @@ beets_config=$HOME/.config/beets
 test -d "$beets_config" ||
   ln -sv "$dir/config" "$beets_config"
 
+# Set up whatlastgenre config directory.
+if [ ! -f ~/.whatlastgenre/config ]; then
+  mkdir -p ~/.whatlastgenre
+  cat > ~/.whatlastgenre/config <<EOF
+[wlg]
+sources = discogs, lastfm
+whitelist = 
+tagsfile = 
+id3v23sep = 
+
+[genres]
+love = 
+hate = alternative, electronic, indie, pop, rock
+
+[scores]
+artist = 1.33
+various = 0.66
+splitup = 0.33
+minimum = 0.10
+src_discogs = 1.00
+src_lastfm = 0.66
+src_mbrainz = 0.66
+src_redacted = 1.50
+
+[discogs]
+token = 
+secret = 
+
+[redacted]
+username = 
+password = 
+session = 
+EOF
+fi
+
 # Verify that everything is working.
 # Note: beet returns exit code 0 even when plugins fail to load, so we check explicitly.
 beets_info=$(beet --version 2>&1)
