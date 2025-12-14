@@ -11,10 +11,12 @@ command -v convert >/dev/null 2>&1 || {
   sudo apt install imagemagick || exit 2
 }
 
-# Clone needed plugin sources.
+# Clone needed sources.
 dir=$(cd "$(dirname "$0")" && pwd)
 beets_code="$HOME/code/music"
 mkdir -p "$beets_code"
+test -d "$beets_code/beets" ||
+  git clone git@github.com:beetbox/beets "$beets_code/beets"
 test -d "$beets_code/whatlastgenre" ||
   git clone git@github.com:YetAnotherNerd/whatlastgenre "$beets_code/whatlastgenre"
 test -d "$beets_code/beets-artistcountry" ||
@@ -25,12 +27,16 @@ test -d "$beets_code/beetle" ||
   git clone https://gitlab.com/maxburon/beetle.git "$beets_code/beetle"
 
 beet --version >/dev/null 2>&1 || {
-  # Install beets into isolated tool environment with needed plugins.
-  uv tool install 'beets[discogs,lyrics,web]' \
-    --with beets-usertag \
-    --with-editable "$beets_code/whatlastgenre" \
-    --with-editable "$beets_code/beets-artistcountry" \
-    --with-editable "$beets_code/beets-ibroadcast"
+  # Install beets from source into uv environment with needed plugins.
+  cd "$beets_code/beets"
+  uv venv
+  source .venv/bin/activate
+  uv pip install -e '.[discogs,lyrics,web]'
+  uv pip install beets-usertag
+  uv pip install -e "$beets_code/whatlastgenre"
+  uv pip install -e "$beets_code/beets-artistcountry"
+  uv pip install -e "$beets_code/beets-ibroadcast"
+  uv pip install -e "$dir"
 }
 
 # Set up beets config directory.

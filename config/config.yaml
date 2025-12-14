@@ -7,7 +7,8 @@ musicbrainz:
   genres: yes
 
 pluginpath:
-  - ~/.local/share/uv/tools/beets/lib/python3.12/site-packages/beetsplug
+  - ~/code/music/beets/beetsplug
+  - ~/code/music/beets/.venv/lib/python3.12/site-packages/beetsplug
   - ~/code/music/beets-ibroadcast/beetsplug
   - ~/code/music/beets-artistcountry/beetsplug
 
