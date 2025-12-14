@@ -29,6 +29,8 @@
 # - Meditation/<artist>/...
 # - Soundtracks/<franchise>/...
 
+import os
+
 ### INLINE FIELDS ###
 
 def topdir(args):
@@ -167,3 +169,9 @@ def _simpleartist(artist):
     feat = safe_artist.lower().find(' featuring ')
     if feat >= 0: return safe_artist[:feat]
     return safe_artist
+
+def _log(message):
+    logfile = os.environ.get('CTRPATHS_LOGFILE', None)
+    if not logfile: return
+    with open(logfile, 'a') as f:
+        f.write(f'{message}\n')
