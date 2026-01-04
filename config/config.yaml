@@ -7,8 +7,9 @@ musicbrainz:
   genres: yes
 
 pluginpath:
+  - ~/.local/share/uv/tools/beets/lib/python3.12/site-packages/beetsplug  # beets as uv tool
+  - /usr/local/lib/python3.11/site-packages/beetsplug                     # inside beets-flask container
   - ~/code/music/beets/beetsplug
-  - ~/code/music/beets/.venv/lib/python3.12/site-packages/beetsplug
   - ~/code/music/beets-ibroadcast/beetsplug
   - ~/code/music/beets-artistcountry/beetsplug
   - /home/beetle/code/music/whatlastgenre/plugin/beets/beetsplug/         # HACK for beets-flask

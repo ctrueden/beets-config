@@ -27,16 +27,18 @@ test -d "$beets_code/beetle" ||
   git clone https://gitlab.com/maxburon/beetle.git "$beets_code/beetle"
 
 beet --version >/dev/null 2>&1 || {
-  # Install beets from source into uv environment with needed plugins.
-  cd "$beets_code/beets"
-  uv venv
-  source .venv/bin/activate
-  uv pip install -e '.[discogs,embedart,fetchart,lyrics,web]'
-  uv pip install beets-usertag
-  uv pip install -e "$beets_code/whatlastgenre"
-  uv pip install -e "$beets_code/beets-artistcountry"
-  uv pip install -e "$beets_code/beets-ibroadcast"
-  uv pip install -e "$dir"
+  uv tool install beets \
+    --with beets-usertag \
+    --with mutagen \
+    --with requests \
+    --with packaging \
+    --with rauth \
+    --with-editable "$beets_code/beets[discogs,embedart,fetchart,lyrics,web]" \
+    --with-editable "$beets_code/beets-config" \
+    --with-editable "$beets_code/beets-artistcountry" \
+    --with-editable "$beets_code/beets-ibroadcast" \
+    --with-editable "$beets_code/whatlastgenre" \
+    --reinstall
 }
 
 # Set up beets config directory.
