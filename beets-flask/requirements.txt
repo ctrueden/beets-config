@@ -1,0 +1,20 @@
+# Third-party beets plugins
+beets-usertag>=1.0.1
+
+# whatlastgenre dependencies
+mutagen>=1.45.0
+requests>=2.25.0
+
+# Install packaging to avoid beets runtime error:
+#   Traceback (most recent call last):
+#     File "/usr/local/bin/beet", line 5, in <module>
+#       from beets.ui import main
+#     File "/home/curtis/code/music/beets/beets/__init__.py", line 20, in <module>
+#       from .util.deprecation import deprecate_imports
+#     File "/home/curtis/code/music/beets/beets/util/deprecation.py", line 7, in <module>
+#       from packaging.version import Version
+#   ModuleNotFoundError: No module named 'packaging'
+packaging
+
+# Install rauth to avoid another error (TODO: document what/when)
+rauth

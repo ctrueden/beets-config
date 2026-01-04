@@ -1,0 +1,20 @@
+#!/bin/sh
+
+docker run -d -p 5001:5001 \
+  -e TZ=US/Chicago \
+  -e USER_ID=1000 \
+  -e GROUP_ID=1000 \
+  -v      ~/code/music/beets-config/config/:/config/beets/               \
+  -v ~/code/music/beets-config/beets-flask/:/config/beets-flask/         \
+  -v                          /quark/music/:/quark/music/                \
+  -v                 /quark/incoming/music/:/quark/incoming/music/       \
+  -v                          ~/code/music/:/home/beetle/code/music/     \
+  -v                      ~/.whatlastgenre/:/home/beetle/.whatlastgenre/ \
+  -v                          ~/code/music/:/root/code/music/            \
+  -v                      ~/.whatlastgenre/:/root/.whatlastgenre/        \
+  --name beets-flask \
+  pspitzner/beets-flask:stable
+
+# Note: music folders must match paths inside and out of container!
+# If you want to persist the logs, you can mount a logs directory
+# - /wherever/logs/:/logs

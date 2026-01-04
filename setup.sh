@@ -31,7 +31,7 @@ beet --version >/dev/null 2>&1 || {
   cd "$beets_code/beets"
   uv venv
   source .venv/bin/activate
-  uv pip install -e '.[discogs,lyrics,web]'
+  uv pip install -e '.[discogs,embedart,fetchart,lyrics,web]'
   uv pip install beets-usertag
   uv pip install -e "$beets_code/whatlastgenre"
   uv pip install -e "$beets_code/beets-artistcountry"

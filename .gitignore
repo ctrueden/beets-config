@@ -1,5 +1,6 @@
 /*.egg-info/
-__pycache__/
+/beets-flask/beets-flask-sqlite.db
 /config/*.json
 /config/library.db*
 /config/state.pickle
+__pycache__/

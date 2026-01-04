@@ -1,0 +1,37 @@
+# ------------------------------------------------------------------------------------ #
+#                                   BEETS GUI CONFIG                                   #
+# ------------------------------------------------------------------------------------ #
+
+gui:
+    num_preview_workers: 4 # how many previews to generate in parallel
+
+    library:
+        # Use to split artists in the library view if using multiple artists in a field.
+        # Set to an empty list to disable this feature.
+        artist_separators: ["&"]
+
+    terminal:
+        start_path: "/quark/music" # the directory where to start new terminal sessions
+
+    inbox:
+        folders:
+            Inbox1:
+                name: "Inbox"
+                path: "/quark/incoming/music"
+                autotag: no
+                # do not automatically trigger tagging and do not automatically import
+            Inbox2:
+                name: "Auto Inbox"
+                path: "/quark/incoming/music/auto"
+                autotag: "auto"
+                # trigger tag and import if a good match is found based on `auto_threshold`
+                auto_threshold: null
+                # if set to null, uses the value in beets config (match.strong_rec_thresh)
+                # define the distance from a perfect match, i.e. set to 0.1 to import
+                # matches with 90% similarity or better.
+            Inbox3:
+                # This inbox only generates previews, but does not auto-import.
+                name: "Preview Inbox"
+                path: "/quark/incoming/music/preview"
+                autotag: "preview"
+                # trigger tag but do not import, recommended for most control
