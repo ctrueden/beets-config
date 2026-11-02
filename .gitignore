@@ -1,4 +1,5 @@
 /*.egg-info/
+/.local/
 /beets-flask/beets-flask-sqlite.db
 /config/*.json
 /config/library.db*
