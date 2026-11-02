@@ -1,0 +1,1 @@
+I have various shell scripts in `bin` for tidying up my music collection, with `bin/beets-checkup` serving as the toplevel script that invokes many of the others. This is quite hacky, and it would be better to transform it into a proper `tidy` plugin for Beets, with flexible configuration to meet various people's preferences.
