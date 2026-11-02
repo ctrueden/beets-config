@@ -44,7 +44,7 @@ def subdir(args, singleton=False):
     tdir = topdir(args)
 
     if tdir == 'Classical':
-        composer = _value('composer', args)
+        composer = _composer(args)
         if not composer: return '[Unknown Composer]'
         if composer.lower() == '[various]': return '[Various Composers]'
         return composer
@@ -115,19 +115,45 @@ def disc_and_track(args):
     disc =_value('disc', args)
     disctotal =_value('disctotal', args) or 1
     track =_value('track', args)
-    tracktotal =_value('tracktotal', args) or 2
+    tracktotal = _album_tracktotal(args) or 2
 
-    track_prefix = _zeropad(track, tracktotal)
     if disctotal <= 1:
-        return track_prefix
+        return _zeropad(track, tracktotal)
 
+    # Multi-disc: always at least two track digits, e.g. 1-01.
+    track_prefix = _zeropad(track, max(tracktotal, 10))
     disc_prefix = _zeropad(disc, disctotal)
     return f'{disc_prefix}-{track_prefix}'
 
 ### HELPER FUNCTIONS ###
 
-def _value(key, args):
-    return args[key] if key in args else None
+def _value(key, obj):
+    # obj is normally the beets Item or Album (inline's `db_obj`). Item.get
+    # falls back to the item's album, so album-level attributes (e.g. set via
+    # `beet modify -a category=...`) are respected when computing item paths.
+    # A plain dict also works here.
+    return obj.get(key)
+
+def _composer(obj):
+    # Albums may carry a legacy `composer` flexible attribute; items (since
+    # beets 2.9) only have the multi-valued `composers` field.
+    composer = _value('composer', obj)
+    if composer: return composer
+    composers = _value('composers', obj) or []
+    if len(composers) == 1: return composers[0]
+    if len(composers) > 1: return '[Various]'
+    return None
+
+def _album_tracktotal(obj):
+    # Pad track numbers consistently across all discs of an album: with
+    # per_disc_numbering, tracktotal is per disc, so a short disc would
+    # otherwise get less padding (1-1) than a long one (2-07).
+    get_album = getattr(obj, 'get_album', None)
+    album = get_album() if get_album else None
+    if album:
+        totals = [item.tracktotal for item in album.items() if item.tracktotal]
+        if totals: return max(totals)
+    return _value('tracktotal', obj)
 
 def _zeropad(no, total):
     return str(no).zfill(len(str(total)))

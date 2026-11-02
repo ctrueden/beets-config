@@ -54,3 +54,19 @@ See `ctrpaths` logic for full details.
 ```
 beet import -s --set=category=Soundtracks --set=avmedia='Video Games' --set=franchise='Final Fantasy' Due-Recompense.opus
 ```
+
+## FAQ
+
+### A track or album ended up in the wrong place. How do I fix it?
+
+Set the fields that drive `ctrpaths`, and beets moves the files to match:
+
+```
+beet modify -a album:'Final Fantasy VI' category=Soundtracks avmedia='Video Games' franchise='Final Fantasy'
+```
+
+Use `-a` for album-level fields (as set by `beet import --set`), or omit it to
+change individual tracks. `beet modify` moves files by default (since
+`import.move` is on); pass `-M` to skip that, and run `beet move <query>`
+later. To preview what would move without moving anything, use
+`beet move -p <query>`.

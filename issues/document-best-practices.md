@@ -6,8 +6,6 @@ There are more hints I'd like to include in a FAQ, though:
 
 * When a track has wrong metadata, what is the process for correcting it? First fix the mb ID(s), then `beet mbsync`? What about other data sources? See also items-only-have-one-data-source.md.
 
-* When a track or album ends up in the wrong directory, or with the wrong name, how best to move it to the correct location? `beet move`? See also beet-move-does-not-use-ctrpaths.md.
-
 * What is the process for attaching metadata after the fact? I wasn't checking for Spotify IDs before, but I'd like to add that metadata to all tracks in my library thus far as much as possible. Same for Discogs and other data sources if possible.
 
 * How does transliteration work, and how can I control it if it goes awry? See also better-transliteration-support.md.

@@ -5,14 +5,10 @@ directory: /quark/music
 
 musicbrainz:
   genres: yes
+#  user_agent: beets-config/2.0 (curtis@rueden.us)
 
-pluginpath:
-  - ~/.local/share/uv/tools/beets/lib/python3.12/site-packages/beetsplug  # beets as uv tool
-  - /usr/local/lib/python3.11/site-packages/beetsplug                     # inside beets-flask container
-  - ~/code/music/beets/beetsplug
-  - ~/code/music/beets-ibroadcast/beetsplug
-  - ~/code/music/beets-artistcountry/beetsplug
-  - /home/beetle/code/music/whatlastgenre/plugin/beets/beetsplug/         # HACK for beets-flask
+# NB: No pluginpath needed: all third-party plugins are installed as Python
+# packages contributing to the `beetsplug` namespace package.
 
 plugins:
 
@@ -138,17 +134,17 @@ match:
 #    missing_tracks: medium
 
 album_fields:
-  topdir:           import ctrpaths; return ctrpaths.topdir(globals())
-  subdir:           import ctrpaths; return ctrpaths.subdir(globals())
-  albumdir:         import ctrpaths; return ctrpaths.albumdir(globals())
+  topdir:           import ctrpaths; return ctrpaths.topdir(db_obj)
+  subdir:           import ctrpaths; return ctrpaths.subdir(db_obj)
+  albumdir:         import ctrpaths; return ctrpaths.albumdir(db_obj)
 
 item_fields:
-  topdir:           import ctrpaths; return ctrpaths.topdir(globals())
-  subdir_singleton: import ctrpaths; return ctrpaths.subdir(globals(), singleton=True)
-  safeprefix:       import ctrpaths; return ctrpaths.safeprefix(globals())
-  safetitle:        import ctrpaths; return ctrpaths.safetitle(globals())
+  topdir:           import ctrpaths; return ctrpaths.topdir(db_obj)
+  subdir_singleton: import ctrpaths; return ctrpaths.subdir(db_obj, singleton=True)
+  safeprefix:       import ctrpaths; return ctrpaths.safeprefix(db_obj)
+  safetitle:        import ctrpaths; return ctrpaths.safetitle(db_obj)
   safeartist:       import ctrpaths; return ctrpaths.safeartist(artist)
-  disc_and_track:   import ctrpaths; return ctrpaths.disc_and_track(globals())
+  disc_and_track:   import ctrpaths; return ctrpaths.disc_and_track(db_obj)
 
 paths:
   singleton: $topdir/%the{$subdir_singleton}/$safeprefix%the{$safeartist} - $safetitle
