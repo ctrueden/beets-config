@@ -76,12 +76,21 @@ later. To preview what would move without moving anything, use
 With `asciify_paths: yes`, beets transliterates paths with `unidecode`.
 Before that, ctrpaths (`_translit` in `ctrpaths/__init__.py`):
 
-1. Maps symbols that unidecode drops or mangles to readable ASCII:
+1. Applies the overrides in the `ctrpaths: romaji:` section of `config.yaml`,
+   which map original text to its Latin form. Use these to fix anything
+   that comes out wrong, in names or titles.
+2. For artist names, uses Latin names from MusicBrainz (English aliases or
+   sort names): 矢井田瞳 -> `Hitomi Yaida`. The `romaji` plugin
+   (`beetsplug/romaji.py`) fetches these into `config/romaji-names.json`
+   automatically on import; run `beet romaji` to fetch any that are missing
+   (e.g. after rebuilding the setup), or `beet romaji -f <query>` to refresh.
+3. Maps symbols that unidecode drops or mangles to readable ASCII:
    ♥ -> `(heart)`, ☆☆ -> `(stars)`, ・ -> `.`, ℗ -> `(P)`, etc. Edit the
    `_TRANSLIT` and `_WORD_SYMBOLS` tables to change these.
-2. Romanizes Japanese with cutlet (`ctrpaths/japanese.py`): この誰もいない部屋で
-   -> `Kono dare mo inai heya de`. Kanji are read as Japanese unless the
-   item's `script`/`language` is Chinese or Korean; to fix a misread release,
-   set those fields, e.g. `beet modify -a album:… script=Hant language=zho`.
+4. Romanizes remaining Japanese with cutlet (`ctrpaths/japanese.py`):
+   この誰もいない部屋で -> `Kono dare mo inai heya de`. Kanji are read as
+   Japanese unless the item's `script`/`language` is Chinese or Korean; to
+   fix a misread release, set those fields, e.g.
+   `beet modify -a album:… script=Hant language=zho`.
 
 Preview the effect of any change with `beet move -p <query>`.

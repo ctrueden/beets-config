@@ -6,6 +6,6 @@ setup(
     name='ctrpaths',
     version=2,
     license='Unlicense',
-    packages=['ctrpaths'],
-    install_requires=['cutlet', 'unidic-lite', 'unidecode'],
+    packages=['ctrpaths', 'beetsplug'],
+    install_requires=['cutlet', 'requests', 'unidic-lite', 'unidecode'],
 )

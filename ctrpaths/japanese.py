@@ -22,6 +22,7 @@ _KANJI = '\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff\u3005-\u3007'
 _HAS_KANA = re.compile(f'[{_KANA}]')
 _HAS_KANJI = re.compile(f'[{_KANJI}]')
 _JAPANESE_RUN = re.compile(f'[{_KANA}{_KANJI}]+')
+_PARTICLES = {'と', 'の', 'や', 'が', 'に', 'で', 'を', 'は', 'へ', 'も'}
 _OPENERS = '([{<"\'~-「『（［｛〈《【“‘〜～'
 
 # Variant kanji (itaiji) common in names, which UniDic does not know.
@@ -92,7 +93,11 @@ def romanize(s, kanji=True, title=False):
         # Capitalize at the start of a phrase, but not mid-phrase: "FFの曲"
         # becomes "FF no kyoku", not "FF No kyoku".
         capitalize = before == '' or before.isspace() or before in _OPENERS
-        romaji = _romanize_run(run, capitalize, title)
+        if title and run in _PARTICLES:
+            # Keep particles lowercase in names: "Ranma Saotome to Akane Tendo".
+            romaji = _romanize_run(run, False, False)
+        else:
+            romaji = _romanize_run(run, capitalize, title)
         # Separate romaji from adjacent letters and digits: "LOVEマシーン"
         # becomes "LOVE mashiin", not "LOVEmashiin".
         if before.isalnum(): romaji = ' ' + romaji

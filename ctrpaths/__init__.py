@@ -32,7 +32,7 @@
 import os
 import re
 
-from . import japanese
+from . import aliases, japanese
 
 ### INLINE FIELDS ###
 
@@ -249,11 +249,36 @@ def _kanji_is_japanese(obj):
             _value('language', obj) not in _NON_JAPANESE_LANGUAGES)
 
 def _name(s, obj=None):
-    # Transliterate a person's or group's name: capitalize every word.
+    # Transliterate a person's or group's name. Prefer, in order: overrides
+    # from the config, Latin names from MusicBrainz (see aliases.py), and
+    # automatic romanization with every word capitalized.
+    if not s: return s
+    s = _override(s)
+    s = aliases.lookup(s) or s
     return _translit(s, obj, title=True)
+
+_overrides = None
+
+def _override(s):
+    # Apply the `ctrpaths: romaji:` overrides from the beets config, which map
+    # original text (e.g. 矢井田瞳) to its Latin form (Hitomi Yaida). Longer
+    # keys take precedence over shorter ones they contain.
+    global _overrides
+    if _overrides is None:
+        try:
+            from beets import config
+            table = config['ctrpaths']['romaji'].get(dict) or {}
+        except Exception:
+            table = {}
+        keys = sorted(table, key=len, reverse=True)
+        _overrides = (re.compile('|'.join(map(re.escape, keys))), table) if keys else None
+    if _overrides is None or not s: return s
+    pattern, table = _overrides
+    return pattern.sub(lambda m: table[m.group()], s)
 
 def _translit(s, obj=None, title=False):
     if not s: return s
+    s = _override(s)
     for many, plural, one, single in _WORD_PATTERNS:
         s = many.sub(plural, s)
         s = one.sub(single, s)

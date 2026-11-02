@@ -44,11 +44,15 @@ See also: the `.local/languages` folder, which contains a list of track titles f
   Text with kana is always treated as Japanese; kanji-only text is treated as
   Japanese unless the item's `script`/`language` says Chinese or Korean.
 
+* Names: artist names now come from MusicBrainz (English aliases or Latin
+  sort names), fetched by the `romaji` plugin into a local cache: 矢井田瞳 ->
+  `Hitomi Yaida`, 小池令 -> `Ryo Koike` (cutlet said `Ya Ida Hitomi` and
+  `Koikerei`). Of ~330 non-Latin artist credits, 17 have no Latin name on
+  MusicBrainz; those fall back to cutlet, with an override table
+  (`ctrpaths: romaji:` in `config.yaml`) for the ones it gets wrong.
+
 Still open:
 
-* Names are sometimes segmented wrongly (矢井田瞳 -> `Ya Ida Hitomi` rather
-  than `Yaida Hitomi`; 小池令 -> `Koikerei`). Could add a small override table,
-  or use MusicBrainz artist aliases/sort names when available.
 * Kanji-only text in a Chinese release with no Chinese `script`/`language`
   metadata is misread as Japanese.
 * Tagging files with transliterated values while keeping the originals (see
