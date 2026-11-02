@@ -21,21 +21,26 @@ test -d "$beets_code/whatlastgenre" ||
   git clone git@github.com:YetAnotherNerd/whatlastgenre "$beets_code/whatlastgenre"
 test -d "$beets_code/beets-artistcountry" ||
   git clone git@github.com:agrausem/beets-artistcountry "$beets_code/beets-artistcountry"
+test -d "$beets_code/ibroadcast-python" ||
+  git clone git@github.com:ctrueden/ibroadcast-python "$beets_code/ibroadcast-python"
 test -d "$beets_code/beets-ibroadcast" ||
   git clone git@github.com:ctrueden/beets-ibroadcast "$beets_code/beets-ibroadcast"
 test -d "$beets_code/beetle" ||
   git clone https://gitlab.com/maxburon/beetle.git "$beets_code/beetle"
 
+# NB: beets itself is a pinned release from PyPI, not the source checkout,
+# so that hacking on beets cannot break (or migrate) the live library.
+beets_version=2.14.1
 beet --version >/dev/null 2>&1 || {
-  uv tool install beets \
+  uv tool install "beets[discogs,embedart,fetchart,lyrics,web]==$beets_version" \
     --with beets-usertag \
     --with mutagen \
     --with requests \
     --with packaging \
     --with rauth \
-    --with-editable "$beets_code/beets[discogs,embedart,fetchart,lyrics,web]" \
     --with-editable "$beets_code/beets-config" \
     --with-editable "$beets_code/beets-artistcountry" \
+    --with-editable "$beets_code/ibroadcast-python" \
     --with-editable "$beets_code/beets-ibroadcast" \
     --with-editable "$beets_code/whatlastgenre" \
     --reinstall

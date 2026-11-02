@@ -5,12 +5,12 @@
 # To easily view the output on the console, use:
 #   apic file.mp3 | convert - jpg:- | jp2a -
 
-apic() {
-  mid3v2 --list-raw "$1" | grep APIC | sed 's/.*data=//'
-}
+# Use the tools from the beets uv tool environment (see setup.sh).
+beets_bin="$(uv tool dir)/beets/bin"
 
-. ~/miniconda3/etc/profile.d/conda.sh
-conda activate beets
+apic() {
+  "$beets_bin/mid3v2" --list-raw "$1" | grep APIC | sed 's/.*data=//'
+}
 
 tmpfile=$(mktemp --suffix=.py)
 echo "import sys" > "$tmpfile"
@@ -26,5 +26,5 @@ do
     echo "b'')" >> "$tmpfile"
   fi
 done
-python "$tmpfile"
+"$beets_bin/python" "$tmpfile"
 rm "$tmpfile"

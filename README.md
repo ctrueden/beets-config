@@ -3,9 +3,18 @@ My [beets](https://beets.io/) configuration.
 ## Installation
 
 ```
-mamba env create
-conda activate beets
 ./setup.sh
+```
+
+This clones the needed plugin sources into `~/code/music`, then installs
+`beet` as a [uv](https://docs.astral.sh/uv/) tool: a pinned beets release
+from PyPI, plus editable installs of ctrpaths and the third-party plugins.
+
+To upgrade beets, back up `config/library.db` first (new versions may migrate
+the database schema), bump `beets_version` in `setup.sh`, then:
+
+```
+uv tool uninstall beets && ./setup.sh
 ```
 
 ## My flexible attributes
