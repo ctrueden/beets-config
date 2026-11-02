@@ -4,7 +4,5 @@ I did put some of the details into the toplevel README.md now; maybe that's a go
 
 There are more hints I'd like to include in a FAQ, though:
 
-* When a track has wrong metadata, what is the process for correcting it? First fix the mb ID(s), then `beet mbsync`? What about other data sources? See also items-only-have-one-data-source.md.
-
 * What is the process for attaching metadata after the fact? I wasn't checking for Spotify IDs before, but I'd like to add that metadata to all tracks in my library thus far as much as possible. Same for Discogs and other data sources if possible.
 

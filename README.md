@@ -71,6 +71,19 @@ change individual tracks. `beet modify` moves files by default (since
 later. To preview what would move without moving anything, use
 `beet move -p <query>`.
 
+### A track has wrong metadata. How do I fix it?
+
+- To refresh from the source it was tagged from, run `beet mbsync <query>`;
+  it uses each item's `data_source` (MusicBrainz, Spotify, ...).
+- To match it to a different release, run `beet import -L <query>` and pick
+  (or enter the ID of) the right one. Note that this replaces the album and
+  items in the library: their beets IDs change, though the `added` date and
+  flexible attributes are kept.
+- For one-off fixes, `beet modify <query> field=value`, or `beet edit
+  <query>` to edit in a text editor.
+
+Then `beet write <query>` to write the changes to the files' tags.
+
 ### How are non-ASCII names transliterated for paths?
 
 With `asciify_paths: yes`, beets transliterates paths with `unidecode`.
