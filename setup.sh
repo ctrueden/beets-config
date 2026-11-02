@@ -33,6 +33,7 @@ test -d "$beets_code/beetle" ||
 beets_version=2.14.1
 beet --version >/dev/null 2>&1 || {
   uv tool install "beets[discogs,embedart,fetchart,lyrics,web]==$beets_version" \
+    --with beets-filetote==1.3.7 \
     --with beets-usertag \
     --with mutagen \
     --with requests \

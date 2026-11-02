@@ -91,9 +91,11 @@ plugins:
   - artistcountry   # [PASSIVE] fetch and store artist_country field
                     # https://github.com/agrausem/beets-artistcountry
 
-# NB: DO NOT ENABLE THIS! It sometimes crashes beets and can corrupt filenames.
-#  - copyartifacts   # [PASSIVE] copy-non-music files when importing
-#                    # https://github.com/adammillerio/beets-copyartifacts
+  - filetote        # [PASSIVE] keep non-music files (scans, .lrc, .cue...)
+                    # with their music on import, move and modify
+                    # https://github.com/gtronset/beets-filetote
+# NB: DO NOT ENABLE copyartifacts! It sometimes crashes beets and can corrupt
+# filenames. filetote is its maintained successor.
 
   - ibroadcast      # [PASSIVE] upload your library to iBroadcast
                     # https://github.com/ctrueden/beets-ibroadcast
@@ -177,6 +179,20 @@ paths:
   singleton: $topdir/%the{$subdir_singleton}/$safeprefix%the{$safeartist} - $safetitle
   comp:      $topdir/%the{$subdir}/$albumdir%aunique{albumartist album, albumdisambig albumtype year label catalognum}/($disc_and_track) $safeartist - $safetitle
   default:   $topdir/%the{$subdir}/$albumdir%aunique{albumartist album, albumdisambig albumtype year label catalognum}/($disc_and_track) $safetitle
+
+# Files that don't keep a folder alive: when beets moves the last track out,
+# it deletes them and prunes the folder. Jellyfin regenerates its .nfo files.
+clutter: [Thumbs.DB, .DS_Store, album.nfo, artist.nfo]
+
+filetote:
+  extensions: .*      # every non-music file
+  pairing:
+    enabled: yes      # same-named files (lyrics .lrc) follow their track
+  exclude:
+    filenames: album.nfo artist.nfo Thumbs.db .DS_Store
+  paths:
+    # Keep subfolders (Scans/, Artwork/) rather than flattening them.
+    filetote:default: $albumpath/$subpath$old_filename
 
 embedart:
   compare_threshold: 50

@@ -6,8 +6,28 @@ When I set up Beets, the plugins that kept track of your non-music companion fil
 
 ## Status (November 2026)
 
-beets still has no built-in support. The maintained plugin is
-[beets-filetote](https://github.com/gtronset/beets-filetote) (1.3.7, August
-2026, beets >= 2.4), a successor to copyartifacts. Next step: evaluate it on
-a scratch library (copy a few album folders with artwork and notes, import,
-then `beet modify`/`beet move` them) before enabling it on the real one.
+beets still has no built-in support. Its maintained plugin is
+[beets-filetote](https://github.com/gtronset/beets-filetote) 1.3.7, the
+successor to copyartifacts; it is now installed (`setup.sh`) and enabled
+(`config.yaml`).
+
+Evaluated on a scratch library with copies of real albums (all passed):
+* import: paired `.lrc` files, a `C_scan-*/` subfolder (kept as a
+  subfolder), cue/log files and loose txt/jpg files all came along.
+  `album.nfo` was excluded, as configured.
+* `beet modify` of an album field that changes the path (year, category),
+  and `beet move` after a path-format change: every file followed, and
+  the old folders were removed.
+* singletons: renaming one renamed its paired `.lrc`; other loose files in
+  the shared artist folder stayed put.
+* Jellyfin's `album.nfo`/`artist.nfo` are listed under `clutter`, so beets
+  deletes them and prunes the folder once the music has moved out.
+  Jellyfin regenerates them at the new location.
+
+Why: the 2026-11-02 `beet move` (2,921 tracks, before filetote) left
+companion files behind in 125 old folders. They were moved by hand (215
+files; 167 identical `.lrc` copies and 44 stale `album.nfo` deleted); the log
+is in `.local/move-2026-11-02-companion-files.tsv`.
+
+Remaining: confirm on the next real import, then close this issue. Not
+covered: `beet remove -d` leaves companion files behind.
