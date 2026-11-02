@@ -254,7 +254,8 @@ def _name(s, obj=None):
     # automatic romanization with every word capitalized.
     if not s: return s
     s = _override(s)
-    s = aliases.lookup(s) or s
+    if not aliases.is_latin(s):
+        s = aliases.lookup(s) or s
     return _translit(s, obj, title=True)
 
 _overrides = None
