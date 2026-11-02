@@ -22,11 +22,11 @@ And translates it as:
 
 In the above example, I *think* it's correctly treating it as Japanese (not Chinese) script, but the transliteration is strange; when fed back into Google Translate, it comes out as "この首位 もい内部 う で" and translates as "This top position is also". I also think that Beets sometimes mixes up Chinese versus Japanese transliterations; maybe it does not use the appropriate script metadata from MusicBrainz to figure out which script a particular item is using before transliterating it?
 
-I dug into this once years ago, and determined that Beets uses the `unidecode` library, but not [`unihandecode`](https://pypi.org/project/unihandecode/), to do the decoding. I tried using unihandecode in the `transliterate.py` script in this directory, but never finished turning it into a proper Beets plugin and/or upstream contribution.
+I dug into this once years ago, and determined that Beets uses the `unidecode` library, but not [`unihandecode`](https://pypi.org/project/unihandecode/), to do the decoding. I tried using unihandecode in the `.local/transliterate.py` script, but never finished turning it into a proper Beets plugin and/or upstream contribution.
 
 As part of this project: I would also like to *tag* the files with transliterated characters, writing the original (non-ASCII) script field values to separate tags within the file. I.e. I don't want to throw away the original titles, artist names, album names, etc., but I *do* want to see the transliterated values in my music players. (If the music players themselves would transliterate on the fly, that would be even better, but they don't, and it's easier to just do it in the metadata so that all players behave the way I would prefer.)
 
-See also: the `languages` subfolder, which contains a list of track titles from my collection in various scripts, with text files named according to the four-character script codes.
+See also: the `.local/languages` folder, which contains a list of track titles from my collection in various scripts, with text files named according to the four-character script codes.
 
 ## Progress
 
@@ -34,3 +34,22 @@ See also: the `languages` subfolder, which contains a list of track titles from 
   poorly (hearts, stars, notes, the Letterlike Symbols block, Japanese
   punctuation, etc.) to readable ASCII before beets asciifies paths. See
   `_TRANSLIT` and `_WORD_SYMBOLS` in `ctrpaths/__init__.py`.
+
+* Japanese: `ctrpaths.japanese` romanizes runs of Japanese text with
+  [cutlet](https://github.com/polm/cutlet) (MeCab + UniDic), which segments
+  words and reads them in context, so the example above becomes
+  `GACKT - Kono dare mo inai heya de`. unihandecode turned out to be little
+  better than unidecode: it swaps Mandarin readings for single-character
+  Japanese on'yomi (`konoSui moinaiBu Oku de`), with no word segmentation.
+  Text with kana is always treated as Japanese; kanji-only text is treated as
+  Japanese unless the item's `script`/`language` says Chinese or Korean.
+
+Still open:
+
+* Names are sometimes segmented wrongly (矢井田瞳 -> `Ya Ida Hitomi` rather
+  than `Yaida Hitomi`; 小池令 -> `Koikerei`). Could add a small override table,
+  or use MusicBrainz artist aliases/sort names when available.
+* Kanji-only text in a Chinese release with no Chinese `script`/`language`
+  metadata is misread as Japanese.
+* Tagging files with transliterated values while keeping the originals (see
+  above) is not started.

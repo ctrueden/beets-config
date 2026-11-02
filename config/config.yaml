@@ -143,7 +143,7 @@ item_fields:
   subdir_singleton: import ctrpaths; return ctrpaths.subdir(db_obj, singleton=True)
   safeprefix:       import ctrpaths; return ctrpaths.safeprefix(db_obj)
   safetitle:        import ctrpaths; return ctrpaths.safetitle(db_obj)
-  safeartist:       import ctrpaths; return ctrpaths.safeartist(artist)
+  safeartist:       import ctrpaths; return ctrpaths.safeartist(db_obj)
   disc_and_track:   import ctrpaths; return ctrpaths.disc_and_track(db_obj)
 
 paths:

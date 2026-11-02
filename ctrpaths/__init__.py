@@ -32,14 +32,16 @@
 import os
 import re
 
+from . import japanese
+
 ### INLINE FIELDS ###
 
 def topdir(args):
     category = _value('category', args)
-    return _translit(category or 'Artists')
+    return _translit(category or 'Artists', args)
 
 def subdir(args, singleton=False):
-    return _translit(_subdir(args, singleton))
+    return _translit(_subdir(args, singleton), args)
 
 def _subdir(args, singleton):
     subcategory = _value('subcategory', args)
@@ -51,7 +53,7 @@ def _subdir(args, singleton):
         composer = _composer(args)
         if not composer: return '[Unknown Composer]'
         if composer.lower() == '[various]': return '[Various Composers]'
-        return composer
+        return _name(composer, args)
 
     if tdir == 'Soundtracks':
         franchise = _value('franchise', args)
@@ -67,16 +69,16 @@ def _subdir(args, singleton):
 
     if singleton:
         artist = _value('artist', args)
-        return _simpleartist(artist)
+        return _name(_simpleartist(artist), args)
 
     comp = _value('comp', args)
     if comp: return '[Various Artists]'
 
     albumartist = _value('albumartist', args)
-    return _simpleartist(albumartist)
+    return _name(_simpleartist(albumartist), args)
 
 def albumdir(args):
-    return _translit(_albumdir(args))
+    return _translit(_albumdir(args), args)
 
 def _albumdir(args):
     comp = _value('comp', args)
@@ -90,7 +92,7 @@ def _albumdir(args):
 
 def safeprefix(args):
     prefix =_value('prefix', args)
-    return _translit(f'[{prefix}] ') if prefix else ''
+    return _translit(f'[{prefix}] ', args) if prefix else ''
 
 def safetitle(args):
     title = _value('title', args) or '[Unknown Title]'
@@ -101,10 +103,10 @@ def safetitle(args):
         albumtype = _value('albumtype', args)
         if albumtype == 'live':
             title += ' [live]'
-    return _translit(title)
+    return _translit(title, args)
 
-def safeartist(artist):
-    return _translit(_safeartist(artist))
+def safeartist(args):
+    return _name(_safeartist(_value('artist', args) or ''), args)
 
 def _safeartist(artist):
     if artist == '(həd) p.e.': return 'Hed PE'
@@ -209,6 +211,11 @@ _TRANSLIT = str.maketrans({
     '〜': '~',    # WAVE DASH (unidecode: '~ ')
     '【': '[(',
     '】': ')]',   # (unidecode: ')] ')
+    '「': '[',    # CJK quotation brackets (unidecode: '[' and '] ')
+    '」': ']',
+    '『': '[',
+    '』': ']',
+    '。': '.',    # IDEOGRAPHIC FULL STOP (unidecode: '. ')
     '•': '.',    # BULLET (unidecode: '*')
     '·': '.',    # MIDDLE DOT (unidecode: '*')
     '･': '.',    # HALFWIDTH KATAKANA MIDDLE DOT (unidecode: '*')
@@ -229,12 +236,29 @@ _WORD_PATTERNS = [
     for chars, single, plural in _WORD_SYMBOLS
 ]
 
-def _translit(s):
+# Scripts and languages (as tagged by MusicBrainz) whose Han characters are
+# not Japanese. Other objects with kanji are assumed to be Japanese, because
+# script/language metadata is often missing or wrong (e.g. Latn/eng for a
+# Japanese soundtrack), and most Han text in this collection is Japanese.
+_NON_JAPANESE_SCRIPTS = {'Hans', 'Hant', 'Hani', 'Kore', 'Hang'}
+_NON_JAPANESE_LANGUAGES = {'zho', 'chi', 'cmn', 'yue', 'kor'}
+
+def _kanji_is_japanese(obj):
+    if obj is None: return True
+    return (_value('script', obj) not in _NON_JAPANESE_SCRIPTS and
+            _value('language', obj) not in _NON_JAPANESE_LANGUAGES)
+
+def _name(s, obj=None):
+    # Transliterate a person's or group's name: capitalize every word.
+    return _translit(s, obj, title=True)
+
+def _translit(s, obj=None, title=False):
     if not s: return s
     for many, plural, one, single in _WORD_PATTERNS:
         s = many.sub(plural, s)
         s = one.sub(single, s)
-    return s.translate(_TRANSLIT)
+    s = s.translate(_TRANSLIT)
+    return japanese.romanize(s, kanji=_kanji_is_japanese(obj), title=title)
 
 def _value(key, obj):
     # obj is normally the beets Item or Album (inline's `db_obj`). Item.get
@@ -282,7 +306,7 @@ def _albumname(args, withartist):
     year = original_year or _value('year', args)
 
     year_part = f'({year}) ' if year else ''
-    artist_part = albumartist + ' - ' if albumartist and withartist else ''
+    artist_part = _name(albumartist, args) + ' - ' if albumartist and withartist else ''
     album_part = album if album else '[Unknown Album]'
     return year_part + artist_part + album_part
 

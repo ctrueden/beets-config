@@ -8,4 +8,3 @@ There are more hints I'd like to include in a FAQ, though:
 
 * What is the process for attaching metadata after the fact? I wasn't checking for Spotify IDs before, but I'd like to add that metadata to all tracks in my library thus far as much as possible. Same for Discogs and other data sources if possible.
 
-* How does transliteration work, and how can I control it if it goes awry? See also better-transliteration-support.md.

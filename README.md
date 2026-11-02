@@ -70,3 +70,18 @@ change individual tracks. `beet modify` moves files by default (since
 `import.move` is on); pass `-M` to skip that, and run `beet move <query>`
 later. To preview what would move without moving anything, use
 `beet move -p <query>`.
+
+### How are non-ASCII names transliterated for paths?
+
+With `asciify_paths: yes`, beets transliterates paths with `unidecode`.
+Before that, ctrpaths (`_translit` in `ctrpaths/__init__.py`):
+
+1. Maps symbols that unidecode drops or mangles to readable ASCII:
+   ♥ -> `(heart)`, ☆☆ -> `(stars)`, ・ -> `.`, ℗ -> `(P)`, etc. Edit the
+   `_TRANSLIT` and `_WORD_SYMBOLS` tables to change these.
+2. Romanizes Japanese with cutlet (`ctrpaths/japanese.py`): この誰もいない部屋で
+   -> `Kono dare mo inai heya de`. Kanji are read as Japanese unless the
+   item's `script`/`language` is Chinese or Korean; to fix a misread release,
+   set those fields, e.g. `beet modify -a album:… script=Hant language=zho`.
+
+Preview the effect of any change with `beet move -p <query>`.

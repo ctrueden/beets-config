@@ -7,4 +7,5 @@ setup(
     version=2,
     license='Unlicense',
     packages=['ctrpaths'],
+    install_requires=['cutlet', 'unidic-lite', 'unidecode'],
 )
