@@ -1,7 +1,7 @@
 #!/bin/sh
 
 dir=$(cd "$(dirname "$0")" && pwd)
-musicBase=/voldemort/music
+musicBase=$(beet config | sed -n 's/^directory: //p')
 
 echo "==> Suspect paths"
 beet ls -f '$path' 'path::\.[0-9]\.[a-z0-9]+$' |
@@ -43,13 +43,12 @@ beet ls  -f '$path :: franchise=$franchise' 'franchise::^.*[Tt]he$'
 
 echo
 echo "==> Classical: unset composer"
-beet ls -af '$path' 'category:Classical' 'composer::^$'
-beet ls  -f '$path' 'category:Classical' 'composer::^$'
+beet ls -p 'category:Classical' 'path::/\[Unknown Composer\]/'
 
 echo
 echo "==> Classical: invalid composer name"
-beet ls -af '$path' :: composer=$composer' 'composer::[^a-zA-Z é\[\]-]'
-beet ls  -f '$path' :: composer=$composer' 'composer::[^a-zA-Z é\[\]-]'
+beet ls -af '$path :: composer=$composer' 'category:Classical' 'composer::[^a-zA-Z é\[\]-]'
+beet ls  -f '$path :: composers=$composers' 'category:Classical' 'composers::[^a-zA-Z é\[\]-]'
 
 echo
 echo "==> Anthems: unset subcategory"
@@ -73,5 +72,5 @@ beet ls  -f '$path' category:Holidays 'holiday::^$'
 
 echo
 echo "==> Wrong genres"
-beet ls -af '[$genre] $path' genre:capella
-beet ls -f '[$genre] $path' genre:capella
+beet ls -af '[$genres] $path' genres:capella
+beet ls -f '[$genres] $path' genres:capella
