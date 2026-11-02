@@ -27,3 +27,10 @@ I dug into this once years ago, and determined that Beets uses the `unidecode` l
 As part of this project: I would also like to *tag* the files with transliterated characters, writing the original (non-ASCII) script field values to separate tags within the file. I.e. I don't want to throw away the original titles, artist names, album names, etc., but I *do* want to see the transliterated values in my music players. (If the music players themselves would transliterate on the fly, that would be even better, but they don't, and it's easier to just do it in the metadata so that all players behave the way I would prefer.)
 
 See also: the `languages` subfolder, which contains a list of track titles from my collection in various scripts, with text files named according to the four-character script codes.
+
+## Progress
+
+* Symbols: `ctrpaths` now maps symbols that `unidecode` drops or renders
+  poorly (hearts, stars, notes, the Letterlike Symbols block, Japanese
+  punctuation, etc.) to readable ASCII before beets asciifies paths. See
+  `_TRANSLIT` and `_WORD_SYMBOLS` in `ctrpaths/__init__.py`.

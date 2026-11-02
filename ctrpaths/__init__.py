@@ -30,14 +30,18 @@
 # - Soundtracks/<franchise>/...
 
 import os
+import re
 
 ### INLINE FIELDS ###
 
 def topdir(args):
     category = _value('category', args)
-    return category or 'Artists'
+    return _translit(category or 'Artists')
 
 def subdir(args, singleton=False):
+    return _translit(_subdir(args, singleton))
+
+def _subdir(args, singleton):
     subcategory = _value('subcategory', args)
     if subcategory: return subcategory
 
@@ -72,6 +76,9 @@ def subdir(args, singleton=False):
     return _simpleartist(albumartist)
 
 def albumdir(args):
+    return _translit(_albumdir(args))
+
+def _albumdir(args):
     comp = _value('comp', args)
     if comp: return _albumname(args, withartist=False)
 
@@ -83,7 +90,7 @@ def albumdir(args):
 
 def safeprefix(args):
     prefix =_value('prefix', args)
-    return f'[{prefix}] ' if prefix else ''
+    return _translit(f'[{prefix}] ') if prefix else ''
 
 def safetitle(args):
     title = _value('title', args) or '[Unknown Title]'
@@ -94,9 +101,12 @@ def safetitle(args):
         albumtype = _value('albumtype', args)
         if albumtype == 'live':
             title += ' [live]'
-    return title
+    return _translit(title)
 
 def safeartist(artist):
+    return _translit(_safeartist(artist))
+
+def _safeartist(artist):
     if artist == '(həd) p.e.': return 'Hed PE'
     if artist == '*NSYNC': return 'NSYNC'
     if artist == '? and the Mysterians': return 'Q and the Mysterians'
@@ -126,6 +136,105 @@ def disc_and_track(args):
     return f'{disc_prefix}-{track_prefix}'
 
 ### HELPER FUNCTIONS ###
+
+# Transliterations applied before beets' asciify_paths (unidecode), for
+# characters where unidecode's choice is unreadable or drops the character.
+# Mostly letterlike symbols (U+2100-U+214F), mapped to what they look like.
+_TRANSLIT = str.maketrans({
+    '・': '.',    # KATAKANA MIDDLE DOT (unidecode: '*')
+    '∀': 'A',    # FOR ALL, e.g. BRE∀K (unidecode: '')
+    'Æ': 'AE',
+    'æ': 'ae',
+    '℀': 'a/c',  # ACCOUNT OF
+    '℁': 'a/s',  # ADDRESSED TO THE SUBJECT
+    '℄': 'CL',   # CENTRE LINE SYMBOL
+    '℅': 'c/o',  # CARE OF
+    '℆': 'c/u',  # CADA UNA
+    'ℇ': 'E',    # EULER CONSTANT
+    '℉': 'degF',
+    '℃': 'degC',
+    'ℏ': 'h',    # PLANCK CONSTANT OVER TWO PI
+    '℔': 'lb',   # L B BAR SYMBOL
+    '№': 'No.',  # NUMERO SIGN (unidecode: 'No. ')
+    '℗': '(P)',  # SOUND RECORDING COPYRIGHT
+    '℘': 'P',    # SCRIPT CAPITAL P
+    '℞': 'Rx',   # PRESCRIPTION TAKE
+    '℟': 'R',    # RESPONSE
+    '℠': '(SM)', # SERVICE MARK
+    '℡': '(TEL)',# TELEPHONE SIGN
+    '™': '(TM)', # TRADE MARK SIGN
+    '℣': 'V',    # VERSICLE
+    '℥': 'oz',   # OUNCE SIGN
+    'Ω': 'O',    # OHM SIGN (unidecode: 'ohm')
+    '℧': 'U',    # INVERTED OHM SIGN
+    '℩': 'i',    # TURNED GREEK SMALL LETTER IOTA
+    'Å': 'A',    # ANGSTROM SIGN
+    'ℵ': 'N',    # ALEF SYMBOL
+    'ℶ': 'b',    # BET SYMBOL
+    'ℷ': 'g',    # GIMEL SYMBOL
+    'ℸ': 'd',    # DALET SYMBOL
+    '℺': 'Q',    # ROTATED CAPITAL Q
+    '℻': '(FAX)',# FACSIMILE SIGN
+    'ℼ': 'pi',   # DOUBLE-STRUCK SMALL PI
+    'ℽ': 'y',    # DOUBLE-STRUCK SMALL GAMMA
+    'ℾ': 'G',    # DOUBLE-STRUCK CAPITAL GAMMA
+    'ℿ': 'P',    # DOUBLE-STRUCK CAPITAL PI
+    '⅀': 'E',    # DOUBLE-STRUCK N-ARY SUMMATION
+    '⅁': 'G',    # TURNED SANS-SERIF CAPITAL G
+    '⅂': 'L',    # TURNED SANS-SERIF CAPITAL L
+    '⅃': 'L',    # REVERSED SANS-SERIF CAPITAL L
+    '⅄': 'Y',    # TURNED SANS-SERIF CAPITAL Y
+    '⅊': 'PL',   # PROPERTY LINE
+    '⅋': '&',    # TURNED AMPERSAND
+    '⅌': 'per',  # PER SIGN
+    # Other symbols
+    '☺': '(smiley)',
+    '∞': '(inf)',
+    '♂': '(male)',
+    '♀': '(female)',
+    '⚥': '(intersex)',
+    '⚣': '(gay)',
+    '⚢': '(lesbian)',
+    '⚤': '(hetero)',
+    '⚧': '(trans)',
+    '⚨': '(trans)',
+    '⚦': '(trans)',
+    '⚩': '(trans)',
+    '🜬': '(non-binary)',
+    '⚲': '(neuter)',
+    '☄': '(comet)',
+    '☿': '(mercury)',
+    '⚪': '(circle)',
+    # Punctuation
+    '〜': '~',    # WAVE DASH (unidecode: '~ ')
+    '【': '[(',
+    '】': ')]',   # (unidecode: ')] ')
+    '•': '.',    # BULLET (unidecode: '*')
+    '·': '.',    # MIDDLE DOT (unidecode: '*')
+    '･': '.',    # HALFWIDTH KATAKANA MIDDLE DOT (unidecode: '*')
+    '\ufe0e': '', # VARIATION SELECTOR-15 (text style), e.g. after ⚧ or ⚪
+    '\ufe0f': '', # VARIATION SELECTOR-16 (emoji style)
+})
+
+# Symbols spelled out as words, pluralized when repeated: ♥ -> (heart),
+# ♥♡♥ -> (hearts). Variation selectors between repeats are tolerated.
+_WORD_SYMBOLS = [
+    ('♥♡', 'heart', 'hearts'),
+    ('☆★', 'star', 'stars'),
+    ('♪', 'note', 'notes'),
+]
+_WORD_PATTERNS = [
+    (re.compile(f'(?:[{chars}][\ufe0e\ufe0f]?){{2,}}'), f'({plural})',
+     re.compile(f'[{chars}]'), f'({single})')
+    for chars, single, plural in _WORD_SYMBOLS
+]
+
+def _translit(s):
+    if not s: return s
+    for many, plural, one, single in _WORD_PATTERNS:
+        s = many.sub(plural, s)
+        s = one.sub(single, s)
+    return s.translate(_TRANSLIT)
 
 def _value(key, obj):
     # obj is normally the beets Item or Album (inline's `db_obj`). Item.get
@@ -189,7 +298,7 @@ def _simpletitle(title):
 def _simpleartist(artist):
     if not artist or artist.lower() == '[unknown]':
         return '[Unknown Artist]'
-    safe_artist = safeartist(artist)
+    safe_artist = _safeartist(artist)
     feat = safe_artist.lower().find(' feat. ')
     if feat >= 0: return safe_artist[:feat]
     feat = safe_artist.lower().find(' featuring ')
