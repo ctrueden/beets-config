@@ -66,12 +66,33 @@ See also:
 * mbsync: `musicbrainz.genres` is now `no`, so `beet mbsync` no longer
   replaces whatlastgenre's genres. (When MusicBrainz had no genres, beets
   already left existing ones alone: `overwrite_null` is empty by default.)
-  About 190 items still carry lowercase MusicBrainz genres (`rock`) from
-  earlier mbsyncs, duplicating wlg's capitalized ones (`Rock`).
+  The lowercase genres from earlier mbsyncs (`rock`) are normalized; see
+  below.
+* Cleanup (November 2026): 344 items and albums normalized to the
+  library's capitalized spellings (`rock` → `Rock`, `HARDSTYLE` →
+  `Hardstyle`, stray spaces). Synonyms merged (`Drum and Bass` → `Drum &
+  Bass`, `newage` → `New Age`, `musicals` → `Musical`, `rock instrumental` →
+  `Instrumental Rock`, `rock_pop` → `Rock` + `Pop`, Dutch/French
+  `Alternative en Indie` → `Alternative` + `Indie`). Junk dropped (`genre`,
+  `default`, `data`, DJ website URLs). Database only; not yet written to
+  files. Still questionable: `Misc`/`Miscellaneous`, `canadian`,
+  `Popular music`, and OC ReMix's franchise names as genres (`God of War`).
 * lastgenre: much improved (multi-valued, whitelist with a genre tree,
   normalization, ignore list, `beet lastgenre --pretend`), but still
   Last.fm only. whatlastgenre also uses Discogs, and works, so no switch.
-* iBroadcast tags: `tag-genres.sh` was partially run at some point (about
-  20 `g-*` usertags exist). It has a quoting bug: `R&B` produced the tag
-  `g-r` (the unquoted `&` backgrounded the command). beets-ibroadcast does
-  not send genres itself; iBroadcast reads them from the files' tags.
+* iBroadcast tags: `tag-genres.sh` was partially run at some point. The
+  `g-*` tags were already gone from iBroadcast; the local `g-*` usertags
+  (1,074 items) are now removed too, so `beet ib-upload` won't recreate
+  them. (The script also had a quoting bug: `R&B` produced the tag `g-r`.)
+* iBroadcast genres: beets-ibroadcast doesn't send genres; iBroadcast reads
+  them from the uploaded file. Its track data now has `genre` plus a
+  `genres_additional` list, filled for some files (842 tracks), so it does
+  support multiple genres. Most tracks show the whole comma-separated
+  string as one genre (`Jazz, Trance, House, Soundtrack`, 1,379 tracks).
+  Tested (2026-11-02): an MP3 written by beets 2.14 (one ID3v2.4 `TCON`
+  frame with four values) shows on iBroadcast as the single genre
+  `Rock/Alternative/Alternative Rock/Grunge`, with no `genres_additional`.
+  So iBroadcast does not split ID3 multi-values. The tracks that do have
+  `genres_additional` are mostly Ogg Vorbis and M4A files (833 of 842),
+  which can hold several separate genre fields. Next: test one Ogg file
+  with several `GENRE` fields.
