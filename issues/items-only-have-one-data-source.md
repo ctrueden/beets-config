@@ -43,3 +43,21 @@ And was solved in a merged PR:
 By "solved" I mean that it pulls the linked Discogs and Spotify IDs from the track's MusicBrainz metadata. But:
 * What if the track isn't on MusicBrainz, but rather only Spotify (or YouTube Music, or Amazon Music, or...)?
 * What if Discogs was chosen as the primary tagging source over MusicBrainz?
+
+## Status (beets 2.14)
+
+* Spotify-sourced items still store Spotify IDs in the `mb_*` fields, but
+  the spotify plugin also records them in the `spotify_album_id`,
+  `spotify_artist_id` and `spotify_track_id` flexible attributes (as do the
+  tidal plugin, with `tidal_*_id`, and others).
+* `beet mbsync` (and `beet missing`) now look items up by their stored
+  `data_source`, rather than assuming MusicBrainz; so mbsync refreshes
+  Spotify-sourced items from Spotify.
+* The musicbrainz plugin's `external_ids` option (now enabled in
+  `config.yaml`) records an album's IDs on other services (Spotify, Discogs,
+  Bandcamp, Deezer, Beatport, Tidal) from MusicBrainz URL relations, as
+  `spotify_album_id` etc. This is album-level only, and only for items
+  tagged from MusicBrainz.
+
+Still open: attaching track-level IDs from several sources to one item, and
+linking items that are not on MusicBrainz.

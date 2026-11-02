@@ -1,3 +1,5 @@
+**Update (beets 2.7+):** beets now has a multi-valued `genres` field, written to files as separate genre tags; the old comma-separated values were migrated automatically, and whatlastgenre (upstream, installed editable from `~/code/music/whatlastgenre` by `setup.sh`) now fills the list. See the status section at the end; the original writeup follows.
+
 Beets has a `genre` field, but it officially only supports one string value. One can, however, use it to store multiple genres separated by commas. I do this using the `whatlastgenre` plugin (source code locally at `~/code/music/whatlastgenre`, installed into the `beets` conda environment via `python setup.py install` from there).
 
 The whatlastgenre program needs a configuration file in order to operate. Here's mine:
@@ -55,5 +57,21 @@ For (2), maybe I should be splitting the genre string when uploading tracks to i
 This issue is also trickier than might at first appear because "genre" is such a fuzzy concept. Some of them are super general, some are super specific. I don't want to have *all* super-specific genre tags on iBroadcast... maybe only the ones that have at least X songs in them? So it's a moving target.
 
 See also:
-* The `genres-all.txt` and `genres-ok.txt` files in this folder, which contain extracted genres from my collection, marking which ones I think are worth tagging. It's been years since I generated them, so don't remember how I did it, but I think my idea was to keep only the top X genres that aren't too general.
-* The `tag-genres.sh` script, which outputs another shell script for tagging all the tracks in my collection using `beet addtag` commands. I never ended up doing it though, because: A) `beet addtag` is super slow to run because it's working track by track with custom attributes, which are slower that regular attributes in beets; and B) I was nervous about actually having all these genre tags pooping up my otherwise very useful small curated set of tags I'm using now.
+* The `.local/genres-all.txt` and `.local/genres-ok.txt` files, which contain extracted genres from my collection, marking which ones I think are worth tagging. It's been years since I generated them, so don't remember how I did it, but I think my idea was to keep only the top X genres that aren't too general.
+* The `.local/tag-genres.sh` script, which outputs another shell script for tagging all the tracks in my collection using `beet addtag` commands. I never ended up doing it though, because: A) `beet addtag` is super slow to run because it's working track by track with custom attributes, which are slower that regular attributes in beets; and B) I was nervous about actually having all these genre tags pooping up my otherwise very useful small curated set of tags I'm using now.
+
+## Status (beets 2.14)
+
+* Storage: solved by the `genres` list field (see top).
+* mbsync: `musicbrainz.genres` is now `no`, so `beet mbsync` no longer
+  replaces whatlastgenre's genres. (When MusicBrainz had no genres, beets
+  already left existing ones alone: `overwrite_null` is empty by default.)
+  About 190 items still carry lowercase MusicBrainz genres (`rock`) from
+  earlier mbsyncs, duplicating wlg's capitalized ones (`Rock`).
+* lastgenre: much improved (multi-valued, whitelist with a genre tree,
+  normalization, ignore list, `beet lastgenre --pretend`), but still
+  Last.fm only. whatlastgenre also uses Discogs, and works, so no switch.
+* iBroadcast tags: `tag-genres.sh` was partially run at some point (about
+  20 `g-*` usertags exist). It has a quoting bug: `R&B` produced the tag
+  `g-r` (the unquoted `&` backgrounded the command). beets-ibroadcast does
+  not send genres itself; iBroadcast reads them from the files' tags.

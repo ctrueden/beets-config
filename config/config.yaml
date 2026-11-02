@@ -4,7 +4,18 @@ directory: /quark/music
 # beet write = update files/tags on disk to match library
 
 musicbrainz:
-  genres: yes
+  # NB: whatlastgenre (wlg) manages genres. With MusicBrainz genres enabled,
+  # `beet mbsync` would replace wlg's genres with MusicBrainz's.
+  genres: no
+  # Record the album's IDs on other services, from MusicBrainz URL relations
+  # (as spotify_album_id, discogs_album_id, etc.), on import and mbsync.
+  external_ids:
+    bandcamp: yes
+    beatport: yes
+    deezer: yes
+    discogs: yes
+    spotify: yes
+    tidal: yes
 #  user_agent: beets-config/2.0 (curtis@rueden.us)
 
 # NB: No pluginpath needed: all third-party plugins are installed as Python
