@@ -88,6 +88,26 @@ Before filing:
 - Add tests (an album with embedded art and no artpath, and one with neither).
 - Add a changelog entry and a note in `docs/plugins/web.rst`.
 
+### 6. mbpseudo: doesn't work with mbsync; can't prefer romaji over English
+
+Found testing `mbpseudo` with `custom_tags_only: yes` (2.14.1):
+
+- **mbsync finds nothing.** mbsync looks up the source plugin by the album's
+  `data_source`, which is "MusicBrainz" (mbpseudo even rewrites it to that on
+  import). But mbpseudo's own `data_source` is derived from its class name,
+  "MusicBrainzPseudoRelease", and the `musicbrainz` plugin must be disabled, so
+  `get_metadata_source("MusicBrainz")` returns None and every album logs
+  "Release ID ... not found". Fix: have `MusicBrainzPseudoReleasePlugin` set
+  `data_source = "MusicBrainz"`. With that one-line patch, mbsync fills
+  `title_transl` etc. correctly (tested on two albums).
+- **No choice between translation and transliteration.** A release can have
+  several Latin-script pseudo-releases, e.g. an English translation
+  (language `eng`) and a romaji transliteration (language `jpn`). mbpseudo
+  takes the first one listed. Feature: a `languages` preference (or prefer
+  the pseudo-release whose language matches the official release's).
+  Example: Heart of Air "Blue Flow" (fced703c-f4bf-47ed-9b2d-57dc8a6596e8)
+  gets "Dream of Glass" where the romaji pseudo-release has "Glass no Yume".
+
 ## whatlastgenre
 
 `plugin/beets/beetsplug/wlg.py` imports `beets.ui.decargs`, which is
