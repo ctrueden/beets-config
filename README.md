@@ -97,10 +97,20 @@ Before that, ctrpaths (`_translit` in `ctrpaths/__init__.py`):
    (`beetsplug/romaji.py`) fetches these into `config/romaji-names.json`
    automatically on import; run `beet romaji` to fetch any that are missing
    (e.g. after rebuilding the setup), or `beet romaji -f <query>` to refresh.
-3. Maps symbols that unidecode drops or mangles to readable ASCII:
+3. For album and track titles, uses Latin titles from MusicBrainz
+   pseudo-releases: 硝子の夢 -> `Dream of Glass` (English translation) or
+   `Glass no Yume` (romaji). The `romaji` plugin stores these in the
+   database as `album_transl` and `title_transl` (the names the built-in
+   `mbpseudo` plugin uses), and records the pseudo-release used in
+   `transl_release` (`none` if there is none), at the same times as
+   artist names. The `romaji:` section of `config.yaml` sets which kind
+   wins: `prefer: translation` (in the `languages` listed) or
+   `transliteration`. Each title falls back to the next pseudo-release that
+   has it, and then to the steps below. See `ctrpaths/titles.py`.
+4. Maps symbols that unidecode drops or mangles to readable ASCII:
    ♥ -> `(heart)`, ☆☆ -> `(stars)`, ・ -> `.`, ℗ -> `(P)`, etc. Edit the
    `_TRANSLIT` and `_WORD_SYMBOLS` tables to change these.
-4. Romanizes remaining Japanese with cutlet (`ctrpaths/japanese.py`):
+5. Romanizes remaining Japanese with cutlet (`ctrpaths/japanese.py`):
    この誰もいない部屋で -> `Kono dare mo inai heya de`. Kanji are read as
    Japanese unless the item's `script`/`language` is Chinese or Korean; to
    fix a misread release, set those fields, e.g.

@@ -85,7 +85,8 @@ plugins:
 
   # -- Third party plugins --
 
-  - romaji          # beet romaji [query] - fetch Latin artist names for ctrpaths
+  - romaji          # beet romaji [query] - fetch Latin artist names and
+                    # pseudo-release titles for ctrpaths
                     # (beets-config/beetsplug/romaji.py)
 
   - artistcountry   # [PASSIVE] fetch and store artist_country field
@@ -174,6 +175,12 @@ ctrpaths:
     よーみ: Yomi
     Mr.T と Brother Hiro: Mr.T & Brother Hiro
     満-MITSURU-: MITSURU
+
+# Latin titles for paths from MusicBrainz pseudo-releases: prefer an English
+# translation, then a transliteration (romaji), then cutlet's romanization.
+romaji:
+  languages: [eng]
+  prefer: translation
 
 paths:
   singleton: $topdir/%the{$subdir_singleton}/$safeprefix%the{$safeartist} - $safetitle

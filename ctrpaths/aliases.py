@@ -74,7 +74,8 @@ def known(name):
 
 ### Fetching ###
 
-def _get(entity, mbid, retries=4):
+def mb_get(entity, mbid, inc='artist-credits aliases', retries=4):
+    """Fetch an entity from the MusicBrainz API, respecting its rate limit."""
     import requests
     global _last_request
     for attempt in range(retries + 1):
@@ -84,7 +85,7 @@ def _get(entity, mbid, retries=4):
         _last_request = time.monotonic()
         response = requests.get(
             f'{_MB_URL}/{entity}/{mbid}',
-            params={'inc': 'artist-credits aliases', 'fmt': 'json'},
+            params={'inc': inc, 'fmt': 'json'},
             headers={'User-Agent': _USER_AGENT},
             timeout=30,
         )
@@ -138,7 +139,7 @@ def learn(entity, mbid, *credits):
     it is not fetched again even if MusicBrainz knows no Latin form.
     """
     table = names()
-    data = _get(entity, mbid)
+    data = mb_get(entity, mbid)
     credit = data.get('artist-credit') or []
 
     learned = 0

@@ -63,7 +63,7 @@ def _subdir(args, singleton):
 
     if tdir == 'Covers' or tdir == 'Holidays':
         if singleton:
-            title = _value('title', args)
+            title = _latin(args, 'title', 'title_transl')
             return _simpletitle(title) or '[unknown]'
         return '[Various Songs]'
 
@@ -95,7 +95,7 @@ def safeprefix(args):
     return _translit(f'[{prefix}] ', args) if prefix else ''
 
 def safetitle(args):
-    title = _value('title', args) or '[Unknown Title]'
+    title = _latin(args, 'title', 'title_transl') or '[Unknown Title]'
     subtitle = _value('subtitle', args)
     if subtitle:
         title += f' [{subtitle}]'
@@ -286,6 +286,15 @@ def _translit(s, obj=None, title=False):
     s = s.translate(_TRANSLIT)
     return japanese.romanize(s, kanji=_kanji_is_japanese(obj), title=title)
 
+def _latin(obj, key, transl_key):
+    # A title, or its Latin form from a MusicBrainz pseudo-release (fetched by
+    # the romaji plugin; see titles.py) if it is not Latin. The `ctrpaths:
+    # romaji:` overrides still take precedence when they make it Latin.
+    s = _value(key, obj)
+    if s and not aliases.is_latin(_override(s)):
+        s = _value(transl_key, obj) or s
+    return s
+
 def _value(key, obj):
     # obj is normally the beets Item or Album (inline's `db_obj`). Item.get
     # falls back to the item's album, so album-level attributes (e.g. set via
@@ -326,7 +335,7 @@ def _zeropad(no, total):
 #    return False if value('album_id', args) else True
 
 def _albumname(args, withartist):
-    album = _value('album', args)
+    album = _latin(args, 'album', 'album_transl')
     albumartist = _value('albumartist', args)
     original_year = _value('original_year', args)
     year = original_year or _value('year', args)
