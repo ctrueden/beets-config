@@ -99,8 +99,8 @@ Before that, ctrpaths romanizes names and titles with the
 3. For album and track titles, uses Latin titles from MusicBrainz
    pseudo-releases: 硝子の夢 -> `Dream of Glass` (English translation) or
    `Glass no Yume` (romaji), stored in the database as `album_transl` and
-   `title_transl`. This config prefers an English translation, then a
-   transliteration.
+   `title_transl`. This config prefers a transliteration, then an
+   English translation.
 4. Maps symbols that unidecode drops or mangles to readable ASCII:
    ♥ -> `(heart)`, ☆☆ -> `(stars)`, ・ -> `.`, ℗ -> `(P)`, etc.
 5. Romanizes remaining Japanese with cutlet:
