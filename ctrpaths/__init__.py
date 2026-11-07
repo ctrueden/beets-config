@@ -30,9 +30,8 @@
 # - Soundtracks/<franchise>/...
 
 import os
-import re
 
-from . import aliases, japanese
+from beetsplug.romanize import text
 
 ### INLINE FIELDS ###
 
@@ -139,161 +138,22 @@ def disc_and_track(args):
 
 ### HELPER FUNCTIONS ###
 
-# Transliterations applied before beets' asciify_paths (unidecode), for
-# characters where unidecode's choice is unreadable or drops the character.
-# Mostly letterlike symbols (U+2100-U+214F), mapped to what they look like.
-_TRANSLIT = str.maketrans({
-    '・': '.',    # KATAKANA MIDDLE DOT (unidecode: '*')
-    '∀': 'A',    # FOR ALL, e.g. BRE∀K (unidecode: '')
-    'Æ': 'AE',
-    'æ': 'ae',
-    '℀': 'a/c',  # ACCOUNT OF
-    '℁': 'a/s',  # ADDRESSED TO THE SUBJECT
-    '℄': 'CL',   # CENTRE LINE SYMBOL
-    '℅': 'c/o',  # CARE OF
-    '℆': 'c/u',  # CADA UNA
-    'ℇ': 'E',    # EULER CONSTANT
-    '℉': 'degF',
-    '℃': 'degC',
-    'ℏ': 'h',    # PLANCK CONSTANT OVER TWO PI
-    '℔': 'lb',   # L B BAR SYMBOL
-    '№': 'No.',  # NUMERO SIGN (unidecode: 'No. ')
-    '℗': '(P)',  # SOUND RECORDING COPYRIGHT
-    '℘': 'P',    # SCRIPT CAPITAL P
-    '℞': 'Rx',   # PRESCRIPTION TAKE
-    '℟': 'R',    # RESPONSE
-    '℠': '(SM)', # SERVICE MARK
-    '℡': '(TEL)',# TELEPHONE SIGN
-    '™': '(TM)', # TRADE MARK SIGN
-    '℣': 'V',    # VERSICLE
-    '℥': 'oz',   # OUNCE SIGN
-    'Ω': 'O',    # OHM SIGN (unidecode: 'ohm')
-    '℧': 'U',    # INVERTED OHM SIGN
-    '℩': 'i',    # TURNED GREEK SMALL LETTER IOTA
-    'Å': 'A',    # ANGSTROM SIGN
-    'ℵ': 'N',    # ALEF SYMBOL
-    'ℶ': 'b',    # BET SYMBOL
-    'ℷ': 'g',    # GIMEL SYMBOL
-    'ℸ': 'd',    # DALET SYMBOL
-    '℺': 'Q',    # ROTATED CAPITAL Q
-    '℻': '(FAX)',# FACSIMILE SIGN
-    'ℼ': 'pi',   # DOUBLE-STRUCK SMALL PI
-    'ℽ': 'y',    # DOUBLE-STRUCK SMALL GAMMA
-    'ℾ': 'G',    # DOUBLE-STRUCK CAPITAL GAMMA
-    'ℿ': 'P',    # DOUBLE-STRUCK CAPITAL PI
-    '⅀': 'E',    # DOUBLE-STRUCK N-ARY SUMMATION
-    '⅁': 'G',    # TURNED SANS-SERIF CAPITAL G
-    '⅂': 'L',    # TURNED SANS-SERIF CAPITAL L
-    '⅃': 'L',    # REVERSED SANS-SERIF CAPITAL L
-    '⅄': 'Y',    # TURNED SANS-SERIF CAPITAL Y
-    '⅊': 'PL',   # PROPERTY LINE
-    '⅋': '&',    # TURNED AMPERSAND
-    '⅌': 'per',  # PER SIGN
-    # Other symbols
-    '☺': '(smiley)',
-    '∞': '(inf)',
-    '♂': '(male)',
-    '♀': '(female)',
-    '⚥': '(intersex)',
-    '⚣': '(gay)',
-    '⚢': '(lesbian)',
-    '⚤': '(hetero)',
-    '⚧': '(trans)',
-    '⚨': '(trans)',
-    '⚦': '(trans)',
-    '⚩': '(trans)',
-    '🜬': '(non-binary)',
-    '⚲': '(neuter)',
-    '☄': '(comet)',
-    '☿': '(mercury)',
-    '⚪': '(circle)',
-    # Punctuation
-    '〜': '~',    # WAVE DASH (unidecode: '~ ')
-    '【': '[(',
-    '】': ')]',   # (unidecode: ')] ')
-    '「': '[',    # CJK quotation brackets (unidecode: '[' and '] ')
-    '」': ']',
-    '『': '[',
-    '』': ']',
-    '。': '.',    # IDEOGRAPHIC FULL STOP (unidecode: '. ')
-    '•': '.',    # BULLET (unidecode: '*')
-    '·': '.',    # MIDDLE DOT (unidecode: '*')
-    '･': '.',    # HALFWIDTH KATAKANA MIDDLE DOT (unidecode: '*')
-    '\ufe0e': '', # VARIATION SELECTOR-15 (text style), e.g. after ⚧ or ⚪
-    '\ufe0f': '', # VARIATION SELECTOR-16 (emoji style)
-})
-
-# Symbols spelled out as words, pluralized when repeated: ♥ -> (heart),
-# ♥♡♥ -> (hearts). Variation selectors between repeats are tolerated.
-_WORD_SYMBOLS = [
-    ('♥♡', 'heart', 'hearts'),
-    ('☆★', 'star', 'stars'),
-    ('♪', 'note', 'notes'),
-]
-_WORD_PATTERNS = [
-    (re.compile(f'(?:[{chars}][\ufe0e\ufe0f]?){{2,}}'), f'({plural})',
-     re.compile(f'[{chars}]'), f'({single})')
-    for chars, single, plural in _WORD_SYMBOLS
-]
-
-# Scripts and languages (as tagged by MusicBrainz) whose Han characters are
-# not Japanese. Other objects with kanji are assumed to be Japanese, because
-# script/language metadata is often missing or wrong (e.g. Latn/eng for a
-# Japanese soundtrack), and most Han text in this collection is Japanese.
-_NON_JAPANESE_SCRIPTS = {'Hans', 'Hant', 'Hani', 'Kore', 'Hang'}
-_NON_JAPANESE_LANGUAGES = {'zho', 'chi', 'cmn', 'yue', 'kor'}
-
-def _kanji_is_japanese(obj):
-    if obj is None: return True
-    return (_value('script', obj) not in _NON_JAPANESE_SCRIPTS and
-            _value('language', obj) not in _NON_JAPANESE_LANGUAGES)
+# Romanization comes from the beets-romanize plugin
+# (https://github.com/ctrueden/beets-romanize): overrides from its config,
+# Latin artist names and pseudo-release titles from MusicBrainz, readable
+# symbols, and Japanese romanization with cutlet.
 
 def _name(s, obj=None):
-    # Transliterate a person's or group's name. Prefer, in order: overrides
-    # from the config, Latin names from MusicBrainz (see aliases.py), and
-    # automatic romanization with every word capitalized.
-    if not s: return s
-    s = _override(s)
-    if not aliases.is_latin(s):
-        s = aliases.lookup(s) or s
-    return _translit(s, obj, title=True)
+    # Transliterate a person's or group's name.
+    return text.romanize_name(s, obj)
 
-_overrides = None
-
-def _override(s):
-    # Apply the `ctrpaths: romaji:` overrides from the beets config, which map
-    # original text (e.g. 矢井田瞳) to its Latin form (Hitomi Yaida). Longer
-    # keys take precedence over shorter ones they contain.
-    global _overrides
-    if _overrides is None:
-        try:
-            from beets import config
-            table = config['ctrpaths']['romaji'].get(dict) or {}
-        except Exception:
-            table = {}
-        keys = sorted(table, key=len, reverse=True)
-        _overrides = (re.compile('|'.join(map(re.escape, keys))), table) if keys else None
-    if _overrides is None or not s: return s
-    pattern, table = _overrides
-    return pattern.sub(lambda m: table[m.group()], s)
-
-def _translit(s, obj=None, title=False):
-    if not s: return s
-    s = _override(s)
-    for many, plural, one, single in _WORD_PATTERNS:
-        s = many.sub(plural, s)
-        s = one.sub(single, s)
-    s = s.translate(_TRANSLIT)
-    return japanese.romanize(s, kanji=_kanji_is_japanese(obj), title=title)
+def _translit(s, obj=None):
+    return text.romanize(s, obj)
 
 def _latin(obj, key, transl_key):
-    # A title, or its Latin form from a MusicBrainz pseudo-release (fetched by
-    # the romaji plugin; see titles.py) if it is not Latin. The `ctrpaths:
-    # romaji:` overrides still take precedence when they make it Latin.
-    s = _value(key, obj)
-    if s and not aliases.is_latin(_override(s)):
-        s = _value(transl_key, obj) or s
-    return s
+    # A title, or its Latin form from a MusicBrainz pseudo-release if it is
+    # not Latin (unless the overrides make it Latin).
+    return text.latin_field(obj, key, transl_key)
 
 def _value(key, obj):
     # obj is normally the beets Item or Album (inline's `db_obj`). Item.get

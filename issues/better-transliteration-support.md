@@ -30,12 +30,15 @@ See also: the `.local/languages` folder, which contains a list of track titles f
 
 ## Progress
 
+All of the below now lives in the
+[beets-romanize](https://github.com/ctrueden/beets-romanize) plugin, which
+`ctrpaths` uses.
+
 * Symbols: `ctrpaths` now maps symbols that `unidecode` drops or renders
   poorly (hearts, stars, notes, the Letterlike Symbols block, Japanese
-  punctuation, etc.) to readable ASCII before beets asciifies paths. See
-  `_TRANSLIT` and `_WORD_SYMBOLS` in `ctrpaths/__init__.py`.
+  punctuation, etc.) to readable ASCII before beets asciifies paths.
 
-* Japanese: `ctrpaths.japanese` romanizes runs of Japanese text with
+* Japanese: `ctrpaths` romanizes runs of Japanese text with
   [cutlet](https://github.com/polm/cutlet) (MeCab + UniDic), which segments
   words and reads them in context, so the example above becomes
   `GACKT - Kono dare mo inai heya de`. unihandecode turned out to be little
@@ -45,11 +48,11 @@ See also: the `.local/languages` folder, which contains a list of track titles f
   Japanese unless the item's `script`/`language` says Chinese or Korean.
 
 * Names: artist names now come from MusicBrainz (English aliases or Latin
-  sort names), fetched by the `romaji` plugin into a local cache: 矢井田瞳 ->
+  sort names), fetched into a local cache: 矢井田瞳 ->
   `Hitomi Yaida`, 小池令 -> `Ryo Koike` (cutlet said `Ya Ida Hitomi` and
   `Koikerei`). Of ~330 non-Latin artist credits, 17 have no Latin name on
   MusicBrainz; those fall back to cutlet, with an override table
-  (`ctrpaths: romaji:` in `config.yaml`) for the ones it gets wrong.
+  (`romanize: overrides:` in `config.yaml`) for the ones it gets wrong.
 
 Still open:
 

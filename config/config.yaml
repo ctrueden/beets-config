@@ -85,9 +85,9 @@ plugins:
 
   # -- Third party plugins --
 
-  - romaji          # beet romaji [query] - fetch Latin artist names and
+  - romanize        # beet romanize [query] - fetch Latin artist names and
                     # pseudo-release titles for ctrpaths
-                    # (beets-config/beetsplug/romaji.py)
+                    # https://github.com/ctrueden/beets-romanize
 
   - artistcountry   # [PASSIVE] fetch and store artist_country field
                     # https://github.com/agrausem/beets-artistcountry
@@ -163,11 +163,14 @@ item_fields:
   safeartist:       import ctrpaths; return ctrpaths.safeartist(db_obj)
   disc_and_track:   import ctrpaths; return ctrpaths.disc_and_track(db_obj)
 
-# Overrides for transliterating paths: original text -> Latin form. These
-# apply anywhere in a path, before MusicBrainz names and romanization; see
-# the README's FAQ on transliteration.
-ctrpaths:
-  romaji:
+# Latin-script paths: prefer an English translation from a MusicBrainz
+# pseudo-release, then a transliteration (romaji), then cutlet's
+# romanization. The overrides (original text -> Latin form) apply anywhere in
+# a path, before everything else; see the README's FAQ on transliteration.
+romanize:
+  languages: [eng]
+  prefer: translation
+  overrides:
     早乙女乱馬: Ranma Saotome
     天道あかね: Akane Tendo
     渡辺博也: Hiroya Watanabe
@@ -175,12 +178,6 @@ ctrpaths:
     よーみ: Yomi
     Mr.T と Brother Hiro: Mr.T & Brother Hiro
     満-MITSURU-: MITSURU
-
-# Latin titles for paths from MusicBrainz pseudo-releases: prefer an English
-# translation, then a transliteration (romaji), then cutlet's romanization.
-romaji:
-  languages: [eng]
-  prefer: translation
 
 paths:
   singleton: $topdir/%the{$subdir_singleton}/$safeprefix%the{$safeartist} - $safetitle

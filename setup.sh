@@ -25,6 +25,8 @@ test -d "$beets_code/ibroadcast-python" ||
   git clone git@github.com:ctrueden/ibroadcast-python "$beets_code/ibroadcast-python"
 test -d "$beets_code/beets-ibroadcast" ||
   git clone git@github.com:ctrueden/beets-ibroadcast "$beets_code/beets-ibroadcast"
+test -d "$beets_code/beets-romanize" ||
+  git clone git@github.com:ctrueden/beets-romanize "$beets_code/beets-romanize"
 test -d "$beets_code/beetle" ||
   git clone https://gitlab.com/maxburon/beetle.git "$beets_code/beetle"
 
@@ -39,6 +41,7 @@ beet --version >/dev/null 2>&1 || {
     --with requests \
     --with packaging \
     --with rauth \
+    --with-editable "$beets_code/beets-romanize[japanese]" \
     --with-editable "$beets_code/beets-config" \
     --with-editable "$beets_code/beets-artistcountry" \
     --with-editable "$beets_code/ibroadcast-python" \

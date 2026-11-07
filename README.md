@@ -87,33 +87,31 @@ Then `beet write <query>` to write the changes to the files' tags.
 ### How are non-ASCII names transliterated for paths?
 
 With `asciify_paths: yes`, beets transliterates paths with `unidecode`.
-Before that, ctrpaths (`_translit` in `ctrpaths/__init__.py`):
+Before that, ctrpaths romanizes names and titles with the
+[beets-romanize](https://github.com/ctrueden/beets-romanize) plugin, which:
 
-1. Applies the overrides in the `ctrpaths: romaji:` section of `config.yaml`,
-   which map original text to its Latin form. Use these to fix anything
-   that comes out wrong, in names or titles.
+1. Applies the overrides in the `romanize: overrides:` section of
+   `config.yaml`, which map original text to its Latin form. Use these to fix
+   anything that comes out wrong, in names or titles.
 2. For artist names, uses Latin names from MusicBrainz (English aliases or
-   sort names): 矢井田瞳 -> `Hitomi Yaida`. The `romaji` plugin
-   (`beetsplug/romaji.py`) fetches these into `config/romaji-names.json`
-   automatically on import; run `beet romaji` to fetch any that are missing
-   (e.g. after rebuilding the setup), or `beet romaji -f <query>` to refresh.
+   sort names): 矢井田瞳 -> `Hitomi Yaida`. These are kept in
+   `config/romanize-names.json`.
 3. For album and track titles, uses Latin titles from MusicBrainz
    pseudo-releases: 硝子の夢 -> `Dream of Glass` (English translation) or
-   `Glass no Yume` (romaji). The `romaji` plugin stores these in the
-   database as `album_transl` and `title_transl` (the names the built-in
-   `mbpseudo` plugin uses), and records the pseudo-release used in
-   `transl_release` (`none` if there is none), at the same times as
-   artist names. The `romaji:` section of `config.yaml` sets which kind
-   wins: `prefer: translation` (in the `languages` listed) or
-   `transliteration`. Each title falls back to the next pseudo-release that
-   has it, and then to the steps below. See `ctrpaths/titles.py`.
+   `Glass no Yume` (romaji), stored in the database as `album_transl` and
+   `title_transl`. This config prefers an English translation, then a
+   transliteration.
 4. Maps symbols that unidecode drops or mangles to readable ASCII:
-   ♥ -> `(heart)`, ☆☆ -> `(stars)`, ・ -> `.`, ℗ -> `(P)`, etc. Edit the
-   `_TRANSLIT` and `_WORD_SYMBOLS` tables to change these.
-5. Romanizes remaining Japanese with cutlet (`ctrpaths/japanese.py`):
+   ♥ -> `(heart)`, ☆☆ -> `(stars)`, ・ -> `.`, ℗ -> `(P)`, etc.
+5. Romanizes remaining Japanese with cutlet:
    この誰もいない部屋で -> `Kono dare mo inai heya de`. Kanji are read as
    Japanese unless the item's `script`/`language` is Chinese or Korean; to
    fix a misread release, set those fields, e.g.
    `beet modify -a album:… script=Hant language=zho`.
+
+Names and titles are looked up automatically on import. Run `beet romanize`
+to look up any that are missing (e.g. after rebuilding the setup), or
+`beet romanize -f <query>` to refresh. See the beets-romanize README for
+details.
 
 Preview the effect of any change with `beet move -p <query>`.
