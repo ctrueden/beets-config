@@ -178,6 +178,9 @@ romanize:
     よーみ: Yomi
     Mr.T と Brother Hiro: Mr.T & Brother Hiro
     満-MITSURU-: MITSURU
+    # MusicBrainz aliases that are wrong ("seiya-murai") or were ("H"):
+    村井聖夜: Murai Seiya
+    星野奏子: Kanako Hoshino
 
 paths:
   singleton: $topdir/%the{$subdir_singleton}/$safeprefix%the{$safeartist} - $safetitle
