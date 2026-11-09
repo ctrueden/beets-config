@@ -181,6 +181,13 @@ romanize:
     # MusicBrainz aliases that are wrong ("seiya-murai") or were ("H"):
     村井聖夜: Murai Seiya
     星野奏子: Kanako Hoshino
+    # Credited on MusicBrainz to other artists (or with a wrong alias), so
+    # not looked up; Latin names from their own MusicBrainz entries:
+    アトラスサウンドチーム: ATLUS Sound Team
+    若草恵: Kei Wakakusa
+    外山和彦: Kazuhiko Toyama
+    高橋ひでゆき: Hideyuki Takahashi
+    土田和典: Kazunori Tsuchida
 
 paths:
   singleton: $topdir/%the{$subdir_singleton}/$safeprefix%the{$safeartist} - $safetitle
