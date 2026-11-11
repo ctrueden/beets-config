@@ -70,14 +70,15 @@ Most of the 5,533 comma-containing strings split correctly. The bad ones:
   `Bono, Adam Clayton, The Edge, Larry Mullen, Jr.` (51), where `Jr.`
   becomes a composer of its own. Also Berry Gordy, Jr. and similar.
 
-The legacy `composer` column still holds the original strings, so these can
-be repaired in the database only, e.g.:
+Five more tracks have composers joined by a carriage return
+(`Stephen Duffy\rSteven Page`), which the migration didn't split.
 
-```
-beet modify -W 'composer:Duffy, Stephen & Page, Steven' 'composers=Stephen Duffy; Steven Page'
-beet modify -W 'composer:Page, Steven & Robertson, Ed' 'composers=Steven Page; Ed Robertson'
-beet modify -W 'composer:Larry Mullen, Jr.' 'composers=Bono; Adam Clayton; The Edge; Larry Mullen, Jr.'
-```
+The legacy `composer` column still holds the original strings, so these can
+be repaired in the database only. `beet modify` can't select them: the
+`composer:` query reads the new `composers` list (with a deprecation
+warning), and list queries match single elements. A one-off script that reads
+the legacy column directly and calls `item.store()` works (85 tracks in
+November 2026).
 
 Do this after the mbsync above, so it only covers what MusicBrainz didn't fix.
 The files still hold the single combined string, so the database and files
