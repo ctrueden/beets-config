@@ -188,6 +188,7 @@ romanize:
     外山和彦: Kazuhiko Toyama
     高橋ひでゆき: Hideyuki Takahashi
     土田和典: Kazunori Tsuchida
+  tags: yes
 
 paths:
   singleton: $topdir/%the{$subdir_singleton}/$safeprefix%the{$safeartist} - $safetitle
